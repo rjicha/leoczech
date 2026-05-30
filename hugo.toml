@@ -1,0 +1,52 @@
+baseURL = "https://leoczech.cz/"
+title = "LeoCzech spol. s r.o."
+
+defaultContentLanguage = "cs"
+defaultContentLanguageInSubdir = false
+
+[markup.goldmark.renderer]
+  unsafe = true
+
+[languages.cs]
+  languageName = "Česky"
+  weight = 1
+  contentDir = "content/cs"
+
+  [[languages.cs.menus.main]]
+    name = "Úvod"
+    url = "/"
+    weight = 1
+  [[languages.cs.menus.main]]
+    name = "O nás"
+    url = "/o-nas/"
+    weight = 2
+  [[languages.cs.menus.main]]
+    name = "Papírový lev"
+    url = "/soutez/"
+    weight = 3
+  [[languages.cs.menus.main]]
+    name = "Kontakt"
+    url = "/kontakt/"
+    weight = 4
+
+[languages.en]
+  languageName = "English"
+  weight = 2
+  contentDir = "content/en"
+
+  [[languages.en.menus.main]]
+    name = "Home"
+    url = "/en/"
+    weight = 1
+  [[languages.en.menus.main]]
+    name = "About"
+    url = "/en/about/"
+    weight = 2
+  [[languages.en.menus.main]]
+    name = "Paper Lion"
+    url = "/en/contest/"
+    weight = 3
+  [[languages.en.menus.main]]
+    name = "Contact"
+    url = "/en/contact/"
+    weight = 4
