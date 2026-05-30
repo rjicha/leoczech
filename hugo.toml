@@ -3,12 +3,13 @@ title = "LeoCzech spol. s r.o."
 
 defaultContentLanguage = "cs"
 defaultContentLanguageInSubdir = false
+disableKinds = ["taxonomy", "term"]
 
 [markup.goldmark.renderer]
   unsafe = true
 
 [languages.cs]
-  languageName = "Česky"
+  label = "Česky"
   weight = 1
   contentDir = "content/cs"
 
@@ -30,7 +31,7 @@ defaultContentLanguageInSubdir = false
     weight = 4
 
 [languages.en]
-  languageName = "English"
+  label = "English"
   weight = 2
   contentDir = "content/en"
 
