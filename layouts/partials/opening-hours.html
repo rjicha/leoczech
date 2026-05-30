@@ -1,0 +1,12 @@
+{{ with .Params.opening_hours }}
+<div class="card opening-hours">
+  <h2>{{ i18n "opening_hours" }}</h2>
+  <p>{{ i18n "opening_hours_desc" }}</p>
+  <dl>
+    {{ range . }}
+      <dt>{{ .day }}</dt>
+      <dd>{{ .hours }}</dd>
+    {{ end }}
+  </dl>
+</div>
+{{ end }}
