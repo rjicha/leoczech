@@ -1,0 +1,16 @@
+{{ define "main" }}
+  <h1 class="page-header">{{ .Title }}</h1>
+
+  <div class="two-col">
+    <div class="prose">
+      {{ .Content }}
+    </div>
+    <aside>
+      {{ partial "opening-hours.html" . }}
+    </aside>
+  </div>
+
+  <div class="alert">
+    {{ i18n "parking_warning" }} <strong>{{ i18n "parking_ban" }}</strong>{{ i18n "parking_suffix" }}
+  </div>
+{{ end }}
