@@ -32,6 +32,7 @@ jobs:
           ISSUE_NUMBER: ${{ github.event.issue.number }}
         run: |
           BRANCH_NAME="content-edit/${ISSUE_NUMBER}"
+          git fetch origin "$BRANCH_NAME" 2>/dev/null && git push origin --delete "$BRANCH_NAME" || true
           git checkout -b "$BRANCH_NAME"
 
           claude -p "You are editing the LeoCzech Hugo website. The content files are in content/cs/ (Czech) and content/en/ (English) as Markdown with YAML frontmatter.
