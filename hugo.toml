@@ -1,4 +1,5 @@
 baseURL = "https://leoczech.cz/"
+relativeURLs = true
 title = "LeoCzech spol. s r.o."
 
 defaultContentLanguage = "cs"
