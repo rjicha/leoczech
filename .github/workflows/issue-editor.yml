@@ -1,0 +1,70 @@
+name: AI Content Editor
+
+on:
+  issues:
+    types: [opened, labeled]
+
+jobs:
+  edit-content:
+    if: contains(github.event.issue.labels.*.name, 'content-edit')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Claude Code
+        run: npm install -g @anthropic-ai/claude-code
+
+      - name: Run Claude Code
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          BRANCH_NAME="content-edit/${ISSUE_NUMBER}"
+          git checkout -b "$BRANCH_NAME"
+
+          claude -p "You are editing the LeoCzech Hugo website. The content files are in content/cs/ (Czech) and content/en/ (English) as Markdown with YAML frontmatter.
+
+          A user has requested this change via a GitHub issue:
+
+          Title: ${ISSUE_TITLE}
+
+          Description:
+          ${ISSUE_BODY}
+
+          Apply the requested change to the appropriate content file(s). If the change affects text content, update both Czech and English versions. Make minimal, targeted edits." --allowedTools Edit,Read,Glob,Grep
+
+          git add -A
+          git diff --cached --quiet && echo "No changes made" && exit 0
+
+          git commit -m "content: apply edit from issue #${ISSUE_NUMBER}
+
+          ${ISSUE_TITLE}"
+
+          git push origin "$BRANCH_NAME"
+
+      - name: Create Pull Request
+        if: success()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+        run: |
+          BRANCH_NAME="content-edit/${ISSUE_NUMBER}"
+          git rev-parse --verify "origin/$BRANCH_NAME" 2>/dev/null || exit 0
+
+          gh pr create \
+            --base master \
+            --head "$BRANCH_NAME" \
+            --title "Content edit: ${ISSUE_TITLE}" \
+            --body "Automated content edit from issue #${ISSUE_NUMBER}.
+
+          Please review the changes before merging.
+
+          Closes #${ISSUE_NUMBER}"
