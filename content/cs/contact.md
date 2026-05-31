@@ -34,4 +34,6 @@ personnel:
     role: "váha"
     phone: "+420 724 170 545"
     email: "tomas.sikora@huhtamaki.com"
+  - name: "Alena Vimrová"
+    email: "alena.vimrova@huhtamaki.com"
 ---
