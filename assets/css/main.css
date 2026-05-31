@@ -306,8 +306,37 @@ img {
   margin-top: 0.25rem;
 }
 
+.contact-list .description {
+  font-size: 0.85rem;
+  font-weight: 300;
+  color: #888;
+  margin-top: 0.1rem;
+  margin-bottom: 0.15rem;
+}
+
 .contact-list .details a {
   margin-left: 1rem;
+}
+
+/* --- Contact groups --- */
+
+.contact-group {
+  margin-top: 2rem;
+}
+
+.contact-group h2 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--color-border);
+}
+
+.contact-group-subtitle {
+  font-size: 0.9rem;
+  font-weight: 300;
+  color: #888;
+  margin-top: 0.25rem;
 }
 
 /* --- Contest --- */

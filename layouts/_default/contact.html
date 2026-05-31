@@ -4,19 +4,47 @@
   <div class="two-col">
     <div>
       {{ with .Params.personnel }}
-      <ul class="contact-list">
-        {{ range . }}
-          <li>
-            <h3>{{ .name }} <span class="role">{{ .role }}</span></h3>
-            {{ if or .phone .email }}
-              <div class="details">
-                {{ with .phone }}<span>{{ i18n "phone" }}: {{ . }}</span>{{ end }}
-                {{ with .email }}<a href="mailto:{{ . }}">{{ . }}</a>{{ end }}
-              </div>
+        <ul class="contact-list">
+          {{ range . }}
+            {{ if not .group }}
+              <li>
+                <h3>{{ .name }} <span class="role">{{ .role }}</span></h3>
+                {{ with .description }}<p class="description">{{ . }}</p>{{ end }}
+                {{ if or .phone .email }}
+                  <div class="details">
+                    {{ with .phone }}<span>{{ i18n "phone" }}: {{ . }}</span>{{ end }}
+                    {{ with .email }}<a href="mailto:{{ . }}">{{ . }}</a>{{ end }}
+                  </div>
+                {{ end }}
+              </li>
             {{ end }}
-          </li>
+          {{ end }}
+        </ul>
+      {{ end }}
+
+      {{ range .Params.groups }}
+        {{ $group := . }}
+        {{ $members := where $.Params.personnel "group" $group.key }}
+        {{ with $members }}
+        <div class="contact-group">
+          <h2>{{ $group.title }}</h2>
+          {{ with $group.subtitle }}<p class="contact-group-subtitle">{{ . }}</p>{{ end }}
+          <ul class="contact-list">
+            {{ range . }}
+              <li>
+                <h3>{{ .name }} <span class="role">{{ .role }}</span></h3>
+                {{ with .description }}<p class="description">{{ . }}</p>{{ end }}
+                {{ if or .phone .email }}
+                  <div class="details">
+                    {{ with .phone }}<span>{{ i18n "phone" }}: {{ . }}</span>{{ end }}
+                    {{ with .email }}<a href="mailto:{{ . }}">{{ . }}</a>{{ end }}
+                  </div>
+                {{ end }}
+              </li>
+            {{ end }}
+          </ul>
+        </div>
         {{ end }}
-      </ul>
       {{ end }}
     </div>
 
