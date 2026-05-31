@@ -1,0 +1,6 @@
+{
+  "scripts": {
+    "run": "hugo server -D --port ${CONDUCTOR_PORT:-1313}"
+  },
+  "runScriptMode": "concurrent"
+}

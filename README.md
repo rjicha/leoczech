@@ -2,6 +2,8 @@
 
 Company website for LeoCzech spol. s r.o., built with [Hugo](https://gohugo.io/) and hosted on [GitHub Pages](https://pages.github.com/).
 
+This website is developed and maintained entirely through agentic workflows. Every change starts as a spec, gets implemented by an AI agent on a dedicated branch, and lands via a reviewed pull request. Content editing is also agentic — instead of a CMS admin panel, anyone can open a GitHub Issue with the `content-edit` label and an agent creates a PR with the requested changes. The project serves as both the real company website and a personal experiment in AI-driven development.
+
 ## Development
 
 ```bash
