@@ -1,0 +1,35 @@
+{{ define "main" }}
+  <h1 class="page-header">{{ .Title }}</h1>
+
+  <h2>{{ i18n "contest_subtitle" }}</h2>
+  <p><strong>{{ i18n "contest_continues" }}</strong></p>
+
+  <div class="prose">
+    {{ .Content }}
+  </div>
+
+  <p>{{ i18n "prizes" }}:</p>
+
+  {{ with .Params.prizes }}
+  <div class="prize-list">
+    {{ range . }}
+      <div class="prize-item">
+        <span class="place">{{ i18n (printf "place_%d" .place) }}</span>
+        {{ .prize }}
+      </div>
+    {{ end }}
+  </div>
+  {{ end }}
+
+  <p>{{ i18n "contest_closing" }} {{ .Params.contest_end }}.</p>
+
+  {{ with .Params.photos }}
+  <div class="photo-grid">
+    {{ range . }}
+      <img src="{{ . }}" alt="">
+    {{ end }}
+  </div>
+  {{ end }}
+
+  <p><em>{{ i18n "good_luck" }} {{ $.Params.contact_person }}.</em></p>
+{{ end }}

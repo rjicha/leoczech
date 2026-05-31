@@ -1,0 +1,39 @@
+{{ define "main" }}
+  <h1 class="page-header">{{ .Title }}</h1>
+
+  <div class="two-col">
+    <div>
+      {{ with .Params.personnel }}
+      <ul class="contact-list">
+        {{ range . }}
+          <li>
+            <h3>{{ .name }} <span class="role">{{ .role }}</span></h3>
+            {{ if or .phone .email }}
+              <div class="details">
+                {{ with .phone }}<span>{{ i18n "phone" }}: {{ . }}</span>{{ end }}
+                {{ with .email }}<a href="mailto:{{ . }}">{{ . }}</a>{{ end }}
+              </div>
+            {{ end }}
+          </li>
+        {{ end }}
+      </ul>
+      {{ end }}
+    </div>
+
+    <aside>
+      <div class="card">
+        <address>
+          <strong>LeoCzech spol. s r.o.</strong><br>
+          Hostín u Vojkovic č.p. 64, okres Mělník, PSČ: 277 44
+        </address>
+        <p style="margin-top: 1rem; font-size: 0.9rem;">
+          IČO: 47052163, {{ i18n "registration" }}
+        </p>
+      </div>
+
+      <div class="alert" style="margin-top: 1rem;">
+        {{ i18n "parking_warning" }} <strong>{{ i18n "parking_ban" }}</strong>{{ i18n "parking_suffix" }}
+      </div>
+    </aside>
+  </div>
+{{ end }}
