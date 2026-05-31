@@ -2,7 +2,7 @@ name: AI Content Editor
 
 on:
   issues:
-    types: [opened, labeled]
+    types: [labeled]
 
 jobs:
   edit-content:
@@ -15,6 +15,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Install Claude Code
         run: npm install -g @anthropic-ai/claude-code
