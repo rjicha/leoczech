@@ -18,6 +18,10 @@ Content files are in `content/cs/` (Czech) and `content/en/` (English) as Markdo
 
 To request a content change without editing files directly, open a GitHub Issue with the `content-edit` label. An AI agent will create a PR with the proposed changes.
 
+## Preview
+
+Every pull request automatically gets a deploy preview hosted on Netlify. The preview URL appears as a status check on the PR, allowing reviewers to see the changes on a live site before merging.
+
 ## Deployment
 
 Pushes to `master` automatically build and deploy via GitHub Actions.
