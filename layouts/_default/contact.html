@@ -13,7 +13,7 @@
                 {{ if or .phone .email }}
                   <div class="details">
                     {{ with .phone }}<span>{{ i18n "phone" }}: {{ . }}</span>{{ end }}
-                    {{ with .email }}<a href="mailto:{{ . }}">{{ . }}</a>{{ end }}
+                    {{ with .email }}<span><a href="mailto:{{ . }}">{{ . }}</a></span>{{ end }}
                   </div>
                 {{ end }}
               </li>
@@ -37,7 +37,7 @@
                 {{ if or .phone .email }}
                   <div class="details">
                     {{ with .phone }}<span>{{ i18n "phone" }}: {{ . }}</span>{{ end }}
-                    {{ with .email }}<a href="mailto:{{ . }}">{{ . }}</a>{{ end }}
+                    {{ with .email }}<span><a href="mailto:{{ . }}">{{ . }}</a></span>{{ end }}
                   </div>
                 {{ end }}
               </li>
