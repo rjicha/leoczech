@@ -4,11 +4,26 @@ See `README.md` for project overview, stack, and development setup.
 
 ## Development Workflow
 
-Every change follows this sequence. Do not skip steps.
+Every feature or fix starts with a GitHub issue. Content edits use the `content-edit` label instead (see README.md).
 
-### 1. Spec
+### Naming Conventions
 
-Write a spec in `docs/specs/` as Markdown. The spec must include:
+| Artifact | Pattern | Example |
+|----------|---------|---------|
+| **Branch** | `feature/<issue-number>-<short-description>` or `fix/<issue-number>-<short-description>` | `feature/16-agentic-workflow` |
+| **Spec file** | `docs/specs/<issue-number>-<short-description>.md` | `docs/specs/16-agentic-workflow.md` |
+| **PR title** | `<type>: <description> (#<issue-number>)` | `feat: add issue-first agentic workflow (#16)` |
+| **Squash commit** | Same as PR title (auto from repo settings) | `feat: add issue-first agentic workflow (#16)` |
+
+The issue number ties everything together — branch, spec, PR, and commit are all traceable back to the originating issue.
+
+### 1. Issue
+
+Create a GitHub issue describing the **what** and **why**. If the issue should be implemented automatically by a GitHub Action, add the `automate` label. Otherwise, pick it up locally.
+
+### 2. Spec
+
+Write a spec in `docs/specs/<issue-number>-<short-description>.md`. The spec must include:
 
 - **Goal** - what we're trying to achieve and why
 - **Current State** - what exists today
@@ -18,13 +33,13 @@ Write a spec in `docs/specs/` as Markdown. The spec must include:
 
 Use `docs/specs/contact-page-grouped-layout.md` as a reference for format and level of detail.
 
-### 2. Plan
+### 3. Branch
 
-Create a fresh git branch from `master` for the implementation. Branch naming: `feature/<short-description>` or `fix/<short-description>`.
+Create a fresh git branch from `master` using the naming convention: `feature/<issue-number>-<short-description>` or `fix/<issue-number>-<short-description>`.
 
 Break the spec into ordered implementation steps. Consider dependencies between files.
 
-### 3. Implement
+### 4. Implement
 
 Follow the plan step by step. After each significant change, verify it builds:
 
@@ -32,7 +47,7 @@ Follow the plan step by step. After each significant change, verify it builds:
 hugo --minify
 ```
 
-### 4. Validate
+### 5. Validate
 
 Before creating a PR:
 
@@ -41,12 +56,12 @@ Before creating a PR:
 3. Check both Czech and English versions if content was modified
 4. Confirm the diff matches what the spec describes - nothing more, nothing less
 
-### 5. Pull Request
+### 6. Pull Request
 
 Create a PR targeting `master` with:
 
-- Title summarizing the change
-- Body referencing the spec and listing what was done
+- Title following the convention: `<type>: <description> (#<issue-number>)`
+- Body referencing the issue and listing what was done, with `Closes #<issue-number>`
 - Wait for approval before merging
 
 ## Conventions
