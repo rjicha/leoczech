@@ -196,21 +196,30 @@ img {
 
 .hero {
   position: relative;
-  background: #3a3a3a center/cover no-repeat;
+  background: #3a3a3a;
   color: #fff;
   overflow: hidden;
+}
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .hero::before {
   content: '';
   position: absolute;
   inset: 0;
+  z-index: 1;
   background: linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.45) 100%);
 }
 
 .hero-inner {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   max-width: var(--max-width);
   margin: 0 auto;
   padding: 3.5rem 1rem 3rem;
