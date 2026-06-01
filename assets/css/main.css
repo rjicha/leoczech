@@ -419,17 +419,10 @@ img {
 .footer-inner {
   max-width: var(--max-width);
   margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1fr 1fr auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
   gap: 2rem;
-  align-items: start;
-}
-
-@media (max-width: 768px) {
-  .footer-inner {
-    grid-template-columns: 1fr;
-    text-align: center;
-  }
 }
 
 .site-footer address {
@@ -441,16 +434,11 @@ img {
   font-size: 1.1rem;
 }
 
-.site-footer .footer-links a {
-  display: block;
-  margin-bottom: 0.5rem;
-}
-
 .site-footer .footer-cert img {
-  max-height: 150px;
+  max-height: 120px;
 }
 
-.footer-copy {
+.footer-bottom {
   max-width: var(--max-width);
   margin: 1.5rem auto 0;
   padding-top: 1rem;
@@ -459,4 +447,32 @@ img {
   font-size: 0.85rem;
   font-weight: 300;
   color: var(--color-text-secondary);
+  line-height: 2;
+}
+
+.footer-bottom a {
+  color: var(--color-text-secondary);
+  text-decoration: underline;
+}
+
+.footer-sep {
+  margin: 0 0.4rem;
+  color: var(--color-border);
+}
+
+@media (max-width: 768px) {
+  .footer-inner {
+    flex-direction: column-reverse;
+    align-items: center;
+    text-align: center;
+  }
+
+  .footer-bottom span,
+  .footer-bottom a {
+    display: block;
+  }
+
+  .footer-sep {
+    display: none;
+  }
 }
