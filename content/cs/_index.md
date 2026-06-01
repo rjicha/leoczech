@@ -2,7 +2,6 @@
 title: "Vítejte na stránkách společnosti LeoCzech!"
 description: "Profesionální servis v oblasti nakládání s vybranými odpady"
 hero_headline: "Nakládání se sběrovým papírem a fóliemi"
-hero_subtitle: "Spolupracujeme s papírnami v celé Evropě. Výhradní dodavatel pro Huhtamaki ČR."
 contact_name: "Tomáš Sikora"
 contact_phone: "+420 724 170 545"
 opening_hours:
@@ -16,14 +15,11 @@ opening_hours:
     hours: "7:30 – 15:00"
   - day: "Pátek"
     hours: "7:30 – 13:00"
-intro: "Naše společnost Vám nabízí profesionální servis v oblasti nakládání s vybranými odpady. Zaměřujeme se zejména na výkup a zpracování sběrového papíru a plastových fólií.\n\nSpolupracujeme s papírnami v České republice, na Slovensku, v Nizozemsku, v Německu, Rakousku, Slovinsku a jinde v Evropě. Jsme výhradním dodavatelem sběrového papíru pro papírnu Huhtamaki Česká republika (dříve Jipack)."
+intro: "Naše společnost vám nabízí komplexní a plně profesionální servis v oblasti moderního nakládání s druhotnými surovinami. V rámci našich služeb se specializujeme především na výkup, třídění a následné průmyslové zpracování sběrového papíru a vybraných plastových fólií. Naším cílem je vracet tyto materiály zpět do oběhu a dávat jim nový život.\n\nDíky dlouhodobě budované síti obchodních partnerů úzce spolupracujeme s předními papírnami a recyklačními závody v České republice, Slovensku, v Nizozemsku, Německu, Rakousku či Slovinsku.\n\nJsme součástí finské nadnárodní společnosti Huhtamaki Group, která patří mezi přední světové lídry v oblasti udržitelných obalových řešení. Toto silné mezinárodní zázemí nám poskytuje stabilitu a jistotu, že vaše odpady budou zpracovány v souladu s ekologickými standardy a principy cirkulární ekonomiky."
 services:
   - title: "Výkup papíru"
     description: "Nákup a zpracování sběrového papíru"
     icon: "package"
-  - title: "Odvoz zdarma"
-    description: "Pravidelný svoz z vašeho objektu"
-    icon: "truck"
   - title: "Školy a školky"
     description: "Bleskové sběry a výkup"
     icon: "school"
@@ -36,4 +32,7 @@ services:
   - title: "Přesné vážení"
     description: "Kalibrovaná mostní váha"
     icon: "scale"
+  - title: "Odvoz zdarma"
+    description: "Pravidelný svoz z vašeho objektu"
+    icon: "truck"
 ---

@@ -2,7 +2,6 @@
 title: "Welcome to LeoCzech!"
 description: "Professional waste management services for recyclable paper and plastic films"
 hero_headline: "Recyclable paper and film management"
-hero_subtitle: "Partnering with paper mills across Europe. Exclusive supplier for Huhtamaki Czech Republic."
 contact_name: "Tomáš Sikora"
 contact_phone: "+420 724 170 545"
 opening_hours:
@@ -16,14 +15,11 @@ opening_hours:
     hours: "7:30 – 15:00"
   - day: "Friday"
     hours: "7:30 – 13:00"
-intro: "Our company offers professional services in the management of selected waste materials. We specialize in the purchase and processing of recyclable paper and plastic films.\n\nWe cooperate with paper mills in the Czech Republic, Slovakia, the Netherlands, Germany, Austria, Slovenia, and elsewhere in Europe. We are the exclusive supplier of recyclable paper to the Huhtamaki Czech Republic paper mill (formerly Jipack)."
+intro: "Our company offers comprehensive and fully professional services in the modern management of secondary raw materials. We specialize primarily in the purchase, sorting, and subsequent industrial processing of recyclable paper and selected plastic films. Our goal is to return these materials to circulation and give them new life.\n\nThanks to our long-established network of business partners, we work closely with leading paper mills and recycling plants in the Czech Republic, Slovakia, the Netherlands, Germany, Austria, and Slovenia.\n\nWe are part of the Finnish multinational company Huhtamaki Group, one of the world's leading providers of sustainable packaging solutions. This strong international background gives us the stability and assurance that your waste will be processed in line with environmental standards and the principles of the circular economy."
 services:
   - title: "Paper buyback"
     description: "Purchase and processing of recyclable paper"
     icon: "package"
-  - title: "Free collection"
-    description: "Regular pickup from your premises"
-    icon: "truck"
   - title: "Schools"
     description: "Flash collections and buyback"
     icon: "school"
@@ -36,4 +32,7 @@ services:
   - title: "Accurate weighing"
     description: "Calibrated bridge scale"
     icon: "scale"
+  - title: "Free collection"
+    description: "Regular pickup from your premises"
+    icon: "truck"
 ---

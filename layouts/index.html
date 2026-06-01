@@ -4,7 +4,7 @@
       <div class="hero-text">
         <p class="hero-label">{{ i18n "hero_label" }}</p>
         <h1 class="hero-headline">{{ .Params.hero_headline }}</h1>
-        <p class="hero-subtitle">{{ .Params.hero_subtitle }}</p>
+        {{ with .Params.hero_subtitle }}<p class="hero-subtitle">{{ . }}</p>{{ end }}
       </div>
       {{ with .Params.opening_hours }}
       <div class="hero-hours">
