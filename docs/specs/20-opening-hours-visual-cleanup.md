@@ -14,9 +14,9 @@ Zlepšit přehlednost a čitelnost sekce otevíracích hodin v kartě drobného 
 ## Target State
 
 - Jemný spodní border (`var(--color-border)`) mezi řádky — ne pod posledním
-- Větší gap (0.5rem) pro vzdušnější pocit
 - Dny se silnějším fontem (500) pro lepší orientaci, oba sloupce doleva
-- Lehký padding na řádcích pro prostor kolem borderů
+- Lehký padding (0.4rem) na řádcích pro prostor kolem borderů
+- Úvodní text oddělený od rozpisu hodin (`margin-bottom: 1rem`) a ve světlejší barvě (`--color-text-secondary`)
 
 ## Files to Change
 
