@@ -1,6 +1,8 @@
 ---
 title: "Welcome to LeoCzech!"
 description: "Professional waste management services for recyclable paper and plastic films"
+hero_headline: "Recyclable paper and film management"
+hero_subtitle: "Partnering with paper mills across Europe. Exclusive supplier for Huhtamaki Czech Republic."
 opening_hours:
   - day: "Monday"
     hours: "7:30 – 15:00"
@@ -12,17 +14,23 @@ opening_hours:
     hours: "7:30 – 15:00"
   - day: "Friday"
     hours: "7:30 – 13:00"
+services:
+  - title: "Paper buyback"
+    description: "Purchase and processing of recyclable paper"
+    icon: "package"
+  - title: "Free collection"
+    description: "Regular pickup from your premises"
+    icon: "truck"
+  - title: "Schools"
+    description: "Flash collections and buyback"
+    icon: "school"
+  - title: "Films"
+    description: "Purchase of plastic films"
+    icon: "file"
+  - title: "Contracts"
+    description: "Long-term favorable terms"
+    icon: "file-text"
+  - title: "Accurate weighing"
+    description: "Calibrated bridge scale"
+    icon: "scale"
 ---
-
-Our company offers professional services in the management of selected waste materials. We specialize in the purchase and processing of recyclable paper and plastic films.
-
-We cooperate with paper mills in the Czech Republic, Slovakia, the Netherlands, Germany, Austria, Slovenia, and elsewhere in Europe. We are the exclusive supplier of recyclable paper to the Huhtamaki Czech Republic paper mill (formerly Jipack).
-
-We offer companies, institutions, and individuals:
-
-- Purchase, sale, and in-house processing of recyclable paper and films
-- Regular collection of all usable paper and films from your premises FREE OF CHARGE!
-- Purchase of recyclable paper from schools and kindergartens — organizing "flash collections"
-- Long-term contracts for the purchase of paper and films on very favorable terms
-- Small-scale buyback of paper and films at the Hostín facility at the best possible prices
-- We guarantee accurate weighing with a regularly calibrated bridge scale
