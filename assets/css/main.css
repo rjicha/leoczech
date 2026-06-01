@@ -196,7 +196,7 @@ img {
 
 .hero {
   position: relative;
-  background: #3a3a3a url('/images/hero.jpg') center/cover no-repeat;
+  background: #3a3a3a center/cover no-repeat;
   color: #fff;
   overflow: hidden;
 }
