@@ -23,6 +23,7 @@ personnel:
   - name: "Alena Vimrová"
     role: "obchodní zástupce"
     description: "nákup na středisko Hostín"
+    phone: "+420 606 069 093"
     email: "alena.vimrova@huhtamaki.com"
     group: "obchod"
   - name: "Ivana Petržílková"

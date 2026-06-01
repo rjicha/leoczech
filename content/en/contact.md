@@ -23,6 +23,7 @@ personnel:
   - name: "Alena Vimrová"
     role: "Sales Representative"
     description: "purchasing for the Hostín facility"
+    phone: "+420 606 069 093"
     email: "alena.vimrova@huhtamaki.com"
     group: "sales"
   - name: "Ivana Petržílková"

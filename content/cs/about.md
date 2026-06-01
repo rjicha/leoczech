@@ -10,6 +10,6 @@ V roce 2011 se stala společnost Huhtamaki stoprocentním vlastníkem LeoCzech s
 
 Již od počátku činnosti si LeoCzech spol. s r.o. vybudoval stabilní pozici na českém trhu. Spolupracujeme s řadou firem, které nám dodávají materiál ke zpracování, jako jsou tiskárny, obchody, zpracovatelské závody, ale i školy a zájmové organizace.
 
-Na straně odběratelů jsou to zejména papírny v tuzemsku i ve světě. Jsme výhradním dodavatelem materiálu do sesterské společnosti, papírny Huhtamaki Czech Republic Přibyslavice. Tato papírna používá při své výrobě technologii nasávané papíroviny. Její pomocí vyrábí krabičky a proložky na vejce, ovoce a fixační části obalů pro elektroniku.
+Na straně odběratelů jsou to zejména papírny v tuzemsku i v Evropě. Naším hlavním úkolem je zásobování sesterské společnosti, papírny Huhtamaki Czech Republic se sídlem v Přibyslavicích. Tato papírna používá při své výrobě technologii nasávané papíroviny. Její pomocí vyrábí zejména krabičky a plata na vejce a krabičky na ovoce.
 
 Při zpracování odpadní folie spolupracujeme na straně odběratelů s renomovanými zpracovateli a obchodníky, kteří působí po celém světě. Od roku 2003 je naše společnost držitelem certifikátu jakosti dle norms ISO 9001:2000, uděleným společností BUREAU VERITAS CZECH REPUBLIC.
