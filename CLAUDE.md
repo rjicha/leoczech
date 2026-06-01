@@ -55,6 +55,7 @@ Before creating a PR:
 2. Run `hugo server -D` and visually verify the change in a browser
 3. Check both Czech and English versions if content was modified
 4. Confirm the diff matches what the spec describes - nothing more, nothing less
+5. If the design evolved during implementation, update the spec to reflect the final state
 
 ### 6. Pull Request
 
