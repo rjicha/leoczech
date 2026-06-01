@@ -298,6 +298,49 @@ img {
   }
 }
 
+/* --- Service cards --- */
+
+.services-heading {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+}
+
+.service-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.service-card {
+  background: var(--color-surface);
+  border-radius: 8px;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.service-card svg {
+  width: 32px;
+  height: 32px;
+  stroke: var(--color-primary);
+  stroke-width: 1.5;
+  fill: none;
+  margin-bottom: 0.75rem;
+}
+
+.service-card h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.service-card p {
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+  line-height: 1.4;
+}
+
 /* --- Main content --- */
 
 .container {
