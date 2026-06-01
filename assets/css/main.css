@@ -237,15 +237,31 @@ img {
 
 /* --- Opening hours --- */
 
+.opening-hours p {
+  margin-bottom: 1rem;
+  color: var(--color-text-secondary);
+}
+
 .opening-hours dl {
   display: grid;
   grid-template-columns: auto 1fr;
-  gap: 0.25rem 1rem;
+  gap: 0;
+}
+
+.opening-hours dt,
+.opening-hours dd {
+  padding: 0.4rem 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.opening-hours dt:last-of-type,
+.opening-hours dd:last-of-type {
+  border-bottom: none;
 }
 
 .opening-hours dt {
-  font-weight: 400;
-  text-align: right;
+  font-weight: 500;
+  padding-right: 1rem;
 }
 
 .opening-hours dd {
