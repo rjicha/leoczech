@@ -1,20 +1,20 @@
 <footer class="site-footer">
   <div class="footer-inner">
-    <div>
+    <div class="footer-company">
       <address>
         <strong>LeoCzech spol. s r.o.</strong><br>
         Hostín u Vojkovic č.p. 64, okres Mělník, PSČ 277 44
       </address>
-      <p>IČO: 47052163; DIČ: CZ47052163, DUNS: 495197840</p>
-    </div>
-    <div class="footer-links">
-      <a href="{{ "files/VOP.zip" | relURL }}">{{ i18n "terms" }}</a>
     </div>
     <div class="footer-cert">
       <img src="{{ "images/iso.png" | relURL }}" alt="ISO 9001 certification">
     </div>
   </div>
-  <div class="footer-copy">
-    &copy; {{ now.Year }} LeoCzech spol. s r.o.
+  <div class="footer-bottom">
+    <span>IČO: 47052163 · DIČ: CZ47052163 · DUNS: 495197840</span>
+    <span class="footer-sep">|</span>
+    <a href="{{ "files/VOP.zip" | relURL }}">{{ i18n "terms" }}</a>
+    <span class="footer-sep">|</span>
+    <span>&copy; {{ now.Year }} LeoCzech spol. s r.o.</span>
   </div>
 </footer>
