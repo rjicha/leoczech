@@ -1,14 +1,64 @@
-{{ define "main" }}
-  <h1 class="page-header">{{ .Title }}</h1>
-
-  <div class="two-col">
-    <div class="prose">
-      {{ .Content }}
+{{ define "precontent" }}
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-text">
+        <p class="hero-label">{{ i18n "hero_label" }}</p>
+        <h1 class="hero-headline">{{ .Params.hero_headline }}</h1>
+        <p class="hero-subtitle">{{ .Params.hero_subtitle }}</p>
+      </div>
+      {{ with .Params.opening_hours }}
+      <div class="hero-hours">
+        <h2>{{ i18n "opening_hours" }}</h2>
+        <p class="hero-hours-desc">{{ i18n "opening_hours_desc" }}</p>
+        <dl>
+          {{ range . }}
+            <dt>{{ .day }}</dt>
+            <dd>{{ .hours }}</dd>
+          {{ end }}
+        </dl>
+        {{ with $.Params.contact_phone }}
+        <div class="hero-hours-contact">
+          <a href="tel:{{ . }}">{{ . }}</a>
+        </div>
+        {{ end }}
+      </div>
+      {{ end }}
     </div>
-    <aside>
-      {{ partial "opening-hours.html" . }}
-    </aside>
+  </section>
+{{ end }}
+
+{{ define "main" }}
+  {{ with .Params.intro }}
+  <div class="intro-text">
+    {{ . | markdownify }}
   </div>
+  {{ end }}
+
+  <h2 class="services-heading">{{ i18n "services_heading" }}</h2>
+
+  {{ with .Params.services }}
+  <div class="service-cards">
+    {{ range . }}
+    <div class="service-card">
+      {{ if eq .icon "package" }}
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.5 9.4 7.55 4.24"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+      {{ else if eq .icon "truck" }}
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18h2"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg>
+      {{ else if eq .icon "school" }}
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+      {{ else if eq .icon "file" }}
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg>
+      {{ else if eq .icon "file-text" }}
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg>
+      {{ else if eq .icon "scale" }}
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg>
+      {{ end }}
+      <h3>{{ .title }}</h3>
+      <p>{{ .description }}</p>
+    </div>
+    {{ end }}
+  </div>
+  {{ end }}
 
   <div class="alert">
     {{ i18n "parking_warning" }} <strong>{{ i18n "parking_ban" }}</strong>{{ i18n "parking_suffix" }}

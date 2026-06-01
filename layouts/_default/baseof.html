@@ -7,12 +7,14 @@
   {{ if .Description }}<meta name="description" content="{{ .Description }}">{{ end }}
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Saira:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet">
   {{ $css := resources.Get "css/main.css" | minify | fingerprint }}
   <link rel="stylesheet" href="{{ $css.RelPermalink }}">
 </head>
 <body>
   {{ partial "header.html" . }}
+
+  {{ block "precontent" . }}{{ end }}
 
   <main class="container">
     {{ block "main" . }}{{ end }}
