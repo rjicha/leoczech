@@ -41,17 +41,17 @@ Modernize the website's visual design — new font, lighter navbar, hero image o
 ### Homepage
 
 **Hero section** (full-width, outside `.container` via `precontent` block)
-- Background: stock photo (bales of recycled cardboard, Pexels, free license) with dark gradient overlay: `linear-gradient(to bottom, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.65) 100%)`
+- Background: stock photo (bales of recycled cardboard, Pexels, free license) with light gradient overlay: `linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.45) 100%)`
 - Inner layout: CSS Grid, two columns (`1fr auto`), items vertically centered
 - Left column:
   - Label: "Profesionální servis" (uppercase, weight 300, 0.6 opacity)
   - Headline: large (2.5rem), thin weight (300), text-shadow for readability
   - Subtitle: 0.95rem, weight 300, 0.7 opacity, text-shadow
 - Right column — opening hours card:
-  - Dark semi-transparent background (rgba(0,0,0,0.6)), no border, subtle rounded corners (4px)
-  - Heading: uppercase, ultra-thin (weight 100), 1.05rem
-  - Description text: small (0.7rem), weight 300, faded (0.45 opacity), centered
-  - Hours: 0.8rem, day labels right-aligned, hours left-aligned, grid centered
+  - Gray semi-transparent background (rgba(100,100,100,0.4)), no border, subtle rounded corners (4px), dark text-shadow for readability
+  - Heading: uppercase, ultra-thin (weight 100), 1.05rem, white
+  - Description text: small (0.7rem), weight 300, white (0.8 opacity), centered
+  - Hours: 0.8rem, white text, day labels right-aligned, hours left-aligned, grid centered
   - No row separator lines
   - Contact phone number at the bottom as clickable `tel:` link, separated by thin border-top
   - Max-width: 14rem
