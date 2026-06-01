@@ -9,12 +9,18 @@
       {{ with .Params.opening_hours }}
       <div class="hero-hours">
         <h2>{{ i18n "opening_hours" }}</h2>
+        <p class="hero-hours-desc">{{ i18n "opening_hours_desc" }}</p>
         <dl>
           {{ range . }}
             <dt>{{ .day }}</dt>
             <dd>{{ .hours }}</dd>
           {{ end }}
         </dl>
+        {{ with $.Params.contact_phone }}
+        <div class="hero-hours-contact">
+          <a href="tel:{{ . }}">{{ . }}</a>
+        </div>
+        {{ end }}
       </div>
       {{ end }}
     </div>
@@ -22,6 +28,12 @@
 {{ end }}
 
 {{ define "main" }}
+  {{ with .Params.intro }}
+  <div class="intro-text">
+    {{ . | markdownify }}
+  </div>
+  {{ end }}
+
   <h2 class="services-heading">{{ i18n "services_heading" }}</h2>
 
   {{ with .Params.services }}

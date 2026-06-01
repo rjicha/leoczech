@@ -14,7 +14,7 @@
   --color-surface: #f7f7f8;
   --color-border: #e5e5e5;
   --color-text-secondary: #64748b;
-  --font-family: 'Inter', sans-serif;
+  --font-family: 'Outfit', sans-serif;
   --max-width: 1100px;
 }
 
@@ -205,7 +205,7 @@ img {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.55) 100%);
+  background: linear-gradient(to bottom, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.65) 100%);
 }
 
 .hero-inner {
@@ -217,70 +217,99 @@ img {
   display: grid;
   grid-template-columns: 1fr auto;
   gap: 2rem;
-  align-items: start;
+  align-items: center;
 }
 
 .hero-label {
-  font-size: 0.8rem;
+  font-size: 0.75rem;
+  font-weight: 300;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  opacity: 0.8;
-  margin-bottom: 0.5rem;
+  letter-spacing: 0.15em;
+  opacity: 0.6;
+  margin-bottom: 0.75rem;
 }
 
 .hero-headline {
   font-size: 2.5rem;
-  font-weight: 800;
-  line-height: 1.15;
-  margin-bottom: 0.75rem;
+  font-weight: 300;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+  margin-bottom: 1rem;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
 }
 
 .hero-subtitle {
-  font-size: 1rem;
-  opacity: 0.85;
+  font-size: 0.95rem;
+  font-weight: 300;
+  opacity: 0.7;
   max-width: 90%;
-  line-height: 1.5;
+  line-height: 1.6;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
 }
 
 .hero-hours {
-  background: rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(6px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 10px;
-  padding: 1.25rem 1.5rem;
-  min-width: 220px;
+  background: rgba(0, 0, 0, 0.6);
+  border: none;
+  border-radius: 4px;
+  padding: 1rem 1.25rem;
+  max-width: 14rem;
 }
 
 .hero-hours h2 {
-  font-size: 0.85rem;
-  font-weight: 600;
+  font-size: 1.05rem;
+  font-weight: 100;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
   margin-bottom: 0.75rem;
   color: #fff;
+  text-align: center;
+}
+
+.hero-hours-desc {
+  font-size: 0.7rem;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.45);
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+.hero-hours-contact {
+  margin-top: 0.75rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  text-align: center;
+}
+
+.hero-hours-contact a {
+  font-size: 0.75rem;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+}
+
+.hero-hours-contact a:hover {
+  color: #fff;
+  text-decoration: none;
 }
 
 .hero-hours dl {
   display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 0;
+  grid-template-columns: auto auto;
+  justify-content: center;
+  gap: 0 1rem;
 }
 
 .hero-hours dt,
 .hero-hours dd {
-  padding: 0.25rem 0;
-  font-size: 0.9rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 0.2rem 0;
+  font-size: 0.8rem;
   color: rgba(255, 255, 255, 0.85);
 }
 
-.hero-hours dt:last-of-type,
-.hero-hours dd:last-of-type {
-  border-bottom: none;
-}
-
 .hero-hours dt {
-  font-weight: 500;
-  padding-right: 1.5rem;
+  font-weight: 400;
   color: #fff;
+  text-align: right;
 }
 
 @media (max-width: 768px) {
@@ -300,15 +329,36 @@ img {
 
 /* --- Service cards --- */
 
+@media (max-width: 768px) {
+  .service-cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+.intro-text {
+  font-size: 0.85rem;
+  font-weight: 200;
+  line-height: 1.7;
+  color: var(--color-text-secondary);
+  max-width: 40rem;
+  margin: 0 auto 3rem;
+  text-align: center;
+}
+
+.intro-text p + p {
+  margin-top: 0.75rem;
+}
+
 .services-heading {
   font-size: 1.5rem;
-  font-weight: 700;
-  margin-bottom: 1.5rem;
+  font-weight: 400;
+  margin-bottom: 2rem;
+  text-align: center;
 }
 
 .service-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 1rem;
   margin-bottom: 2rem;
 }
@@ -346,7 +396,7 @@ img {
 .container {
   max-width: var(--max-width);
   margin: 0 auto;
-  padding: 2rem 1rem;
+  padding: 3rem 1rem;
   flex: 1;
 }
 

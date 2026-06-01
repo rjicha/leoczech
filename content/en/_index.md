@@ -3,6 +3,8 @@ title: "Welcome to LeoCzech!"
 description: "Professional waste management services for recyclable paper and plastic films"
 hero_headline: "Recyclable paper and film management"
 hero_subtitle: "Partnering with paper mills across Europe. Exclusive supplier for Huhtamaki Czech Republic."
+contact_name: "Tomáš Sikora"
+contact_phone: "+420 724 170 545"
 opening_hours:
   - day: "Monday"
     hours: "7:30 – 15:00"
@@ -14,6 +16,7 @@ opening_hours:
     hours: "7:30 – 15:00"
   - day: "Friday"
     hours: "7:30 – 13:00"
+intro: "Our company offers professional services in the management of selected waste materials. We specialize in the purchase and processing of recyclable paper and plastic films.\n\nWe cooperate with paper mills in the Czech Republic, Slovakia, the Netherlands, Germany, Austria, Slovenia, and elsewhere in Europe. We are the exclusive supplier of recyclable paper to the Huhtamaki Czech Republic paper mill (formerly Jipack)."
 services:
   - title: "Paper buyback"
     description: "Purchase and processing of recyclable paper"
