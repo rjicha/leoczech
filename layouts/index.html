@@ -1,5 +1,6 @@
 {{ define "precontent" }}
-  <section class="hero" style="background-image: url('{{ "images/hero.jpg" | relURL }}')">
+  <section class="hero">
+    <img class="hero-bg" src="{{ "images/hero.jpg" | relURL }}" alt="">
     <div class="hero-inner">
       <div class="hero-text">
         <p class="hero-label">{{ i18n "hero_label" }}</p>
