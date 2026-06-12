@@ -36,7 +36,7 @@ jobs:
           git fetch origin "$BRANCH_NAME" 2>/dev/null && git push origin --delete "$BRANCH_NAME" || true
           git checkout -b "$BRANCH_NAME"
 
-          claude -p "You are editing the LeoCzech Hugo website. The content files are in content/cs/ (Czech) and content/en/ (English) as Markdown with YAML frontmatter.
+          claude -p --dangerously-skip-permissions "You are editing the LeoCzech Hugo website. The content files are in content/cs/ (Czech) and content/en/ (English) as Markdown with YAML frontmatter.
 
           A user has requested this change via a GitHub issue:
 
@@ -45,7 +45,7 @@ jobs:
           Description:
           ${ISSUE_BODY}
 
-          Apply the requested change to the appropriate content file(s). If the change affects text content, update both Czech and English versions. Make minimal, targeted edits." --allowedTools Edit,Read,Glob,Grep
+          Apply the requested change to the appropriate content file(s). If the change affects text content, update both Czech and English versions. Make minimal, targeted edits."
 
           git add -A
           git diff --cached --quiet && echo "No changes made" && exit 0
