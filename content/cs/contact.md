@@ -67,4 +67,9 @@ personnel:
     phone: "+420 602 391 584"
     email: "dana.kalasova@huhtamaki.com"
     group: "finance"
+  - name: "Pepa Novák"
+    role: "fakturant"
+    phone: "+420 625 258 459"
+    email: "pepa.novak@huhtamaki.com"
+    group: "finance"
 ---

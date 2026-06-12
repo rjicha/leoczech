@@ -67,4 +67,9 @@ personnel:
     phone: "+420 602 391 584"
     email: "dana.kalasova@huhtamaki.com"
     group: "finance"
+  - name: "Pepa Novák"
+    role: "Invoicing Clerk"
+    phone: "+420 625 258 459"
+    email: "pepa.novak@huhtamaki.com"
+    group: "finance"
 ---
