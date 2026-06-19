@@ -19,17 +19,8 @@ other = ", outside the LeoCzech company premises."
 [contest_title]
 other = "Paper Lion"
 
-[contest_subtitle]
-other = "PAPER LION — replace paper for plastic"
-
-[contest_continues]
-other = "The competition for children and youth continues!"
-
-[contest_closing]
-other = "The competition closes on"
-
-[prizes]
-other = "The three schools with the largest collection volume will be rewarded"
+[contest_prizes_intro]
+other = "We compete for valuable and interesting prizes, keeping the competition fair for all schools regardless of size."
 
 [place_1]
 other = "1st place"
@@ -40,8 +31,35 @@ other = "2nd place"
 [place_3]
 other = "3rd place"
 
-[good_luck]
-other = "Best of luck from LeoCzech"
+[contest_audience_label]
+other = "Who can participate"
+
+[contest_sorting_intro]
+other = "To recycle paper properly, basic sorting rules must be followed:"
+
+[contest_sorting_allowed]
+other = "What CAN be collected"
+
+[contest_sorting_forbidden]
+other = "What MUST NOT be included"
+
+[contest_join_heading]
+other = "What is needed, how to register your school and arrange pickup?"
+
+[contest_join_period]
+other = "Collect as much paper as possible during the period from"
+
+[contest_registration]
+other = "You can register now. Simply arrange a paper collection. For registration, scheduling pickups, or any organizational questions, contact the competition coordinator:"
+
+[contest_contact_person]
+other = "Contact person"
+
+[contest_billing]
+other = "Organizer billing details"
+
+[contest_ico]
+other = "ID"
 
 [phone]
 other = "Phone"

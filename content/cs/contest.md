@@ -1,25 +1,41 @@
 ---
-title: "Papírový lev"
+title: "Papírový lev 2026/2027"
 slug: "soutez"
-description: "Soutěž pro děti a mládež ve sběru papíru"
+description: "Ekologická soutěž pro školy ve sběru papíru"
 layout: "contest"
-contest_year: "2022-2023"
-contest_start: "1. 7. 2022"
-contest_end: "23. 6. 2023"
+contest_year: "2026/2027"
+contest_start: "01. 09. 2026"
+contest_end: "18. 06. 2027"
+tagline: "Probuďte ve své škole sběratelskou šelmu a zapojte se do soutěže!"
+target_audience: "Mateřské, základní a střední školy (včetně konzervatoří a dalších školských zařízení)."
 prizes:
   - place: 1
     prize: "Notebook"
   - place: 2
     prize: "Mobilní telefon"
   - place: 3
-    prize: "Poukázka v hodnotě 1000,- Kč"
-contact_person: "Bc. Marie Kopolovičová"
+    prize: "Poukázka v hodnotě 1000 Kč"
+sorting_allowed:
+  - "Noviny a časopisy"
+  - "Kancelářský papír"
+  - "Lepenku a krabice (lepenka max. do 30 % celkové směsi)"
+sorting_forbidden:
+  - "Plasty"
+  - "Kopírovací papíry (kopíráky)"
+  - "Laminované a voskové papíry"
+  - "Šanony"
+  - "Obecně vše, co nelze rozpustit ve vodě"
+contact_person: "Alena Vimrová"
+contact_phone: "+420 606 069 093"
+contact_email: "alena.vimrova@huhtamaki.com"
+billing_address: "Hostín u Vojkovic 64, 277 44"
+billing_ico: "47052163"
+hero_image: "/images/papirovy-lev-hero.jpg"
 photos:
+  - "/images/papirovy-lev-sber.jpg"
   - "/images/sber1.jpg"
   - "/images/sber2.jpg"
   - "/images/sber3.jpg"
 ---
 
-Pro školní rok 2022-2023 jsme připravili soutěž pro děti ze středních a základních škol.
-
-A co je potřeba, abyste mohli s námi soutěžit o ceny? Zapojit se do sběrů a nasbírat co nejvíce v období od 1. 7. 2022 do 23. 6. 2023.
+Vyhlašujeme nový ročník ekologické soutěže pro školy. Proměňte staré sešity, noviny či krabice v přímý finanční zisk pro školu a hodnotné odměny pro žáky.
