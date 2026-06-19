@@ -566,6 +566,19 @@ img {
 
 /* --- Contest --- */
 
+.contest-hero {
+  margin-bottom: 2rem;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.contest-hero img {
+  width: 100%;
+  max-height: 360px;
+  object-fit: cover;
+  display: block;
+}
+
 .contest-tagline {
   font-size: 1.15rem;
   font-weight: 400;
