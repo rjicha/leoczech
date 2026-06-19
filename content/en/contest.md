@@ -10,7 +10,7 @@ tagline: "Awaken the collector beast in your school and join the competition!"
 target_audience: "Kindergartens, primary and secondary schools (including conservatories and other educational institutions)."
 prizes:
   - place: 1
-    prize: "Notebook"
+    prize: "Laptop"
   - place: 2
     prize: "Mobile phone"
   - place: 3

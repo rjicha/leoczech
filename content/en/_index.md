@@ -20,7 +20,7 @@ services:
   - title: "Paper buyback"
     description: "Purchase and processing of recyclable paper"
     icon: "package"
-  - title: "Schools"
+  - title: "Schools and nurseries"
     description: "Flash collections and buyback"
     icon: "school"
   - title: "Films"
