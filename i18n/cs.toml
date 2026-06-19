@@ -19,17 +19,8 @@ other = ", mimo areál firmy LeoCzech."
 [contest_title]
 other = "Papírový lev"
 
-[contest_subtitle]
-other = "PAPÍROVÝ LEV aneb nahraďte papír za plast"
-
-[contest_continues]
-other = "Soutěž pro děti a mládež pokračuje!"
-
-[contest_closing]
-other = "Soutěž se uzavírá dne"
-
-[prizes]
-other = "Tři školy s největším objemem sběru odměníme"
+[contest_prizes_intro]
+other = "Hrajeme o hodnotné a zajímavé ceny tak, aby byla soutěž fér pro všechny školy s různými počty žáků."
 
 [place_1]
 other = "1. místo"
@@ -40,8 +31,35 @@ other = "2. místo"
 [place_3]
 other = "3. místo"
 
-[good_luck]
-other = "Hodně štěstí přeje za LeoCzech"
+[contest_audience_label]
+other = "Pro koho je určena"
+
+[contest_sorting_intro]
+other = "Abychom mohli papír správně zrecyklovat, je potřeba dodržet základní pravidla třídění:"
+
+[contest_sorting_allowed]
+other = "Co JE MOŽNÉ sbírat"
+
+[contest_sorting_forbidden]
+other = "Co sběr OBSAHOVAT NESMÍ"
+
+[contest_join_heading]
+other = "Co je potřeba, jak přihlásit vaši školu a domluvit svoz?"
+
+[contest_join_period]
+other = "Zapojit se do sběrů papíru a nasbírat jej co nejvíce v období od"
+
+[contest_registration]
+other = "Přihlásit se můžete již nyní. Stačí uskutečnit sběr papíru. Pro registraci, domluvu termínů svozu nebo jakékoliv organizační dotazy kontaktujte koordinátorku soutěže:"
+
+[contest_contact_person]
+other = "Kontaktní osoba"
+
+[contest_billing]
+other = "Fakturační údaje pořadatele"
+
+[contest_ico]
+other = "IČO"
 
 [phone]
 other = "Tel."

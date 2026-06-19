@@ -1,14 +1,15 @@
 {{ define "main" }}
   <h1 class="page-header">{{ .Title }}</h1>
 
-  <h2>{{ i18n "contest_subtitle" }}</h2>
-  <p><strong>{{ i18n "contest_continues" }}</strong></p>
+  {{ with .Params.tagline }}
+    <p class="contest-tagline">{{ . }}</p>
+  {{ end }}
 
   <div class="prose">
     {{ .Content }}
   </div>
 
-  <p>{{ i18n "prizes" }}:</p>
+  <p class="contest-prizes-intro">{{ i18n "contest_prizes_intro" }}</p>
 
   {{ with .Params.prizes }}
   <div class="prize-list">
@@ -21,7 +22,48 @@
   </div>
   {{ end }}
 
-  <p>{{ i18n "contest_closing" }} {{ .Params.contest_end }}.</p>
+  {{ with .Params.target_audience }}
+  <div class="contest-section">
+    <h2>{{ i18n "contest_audience_label" }}</h2>
+    <p>{{ . }}</p>
+  </div>
+  {{ end }}
+
+  <div class="contest-section">
+    <p>{{ i18n "contest_sorting_intro" }}</p>
+    <div class="sorting-rules">
+      {{ with .Params.sorting_allowed }}
+      <div class="sorting-col sorting-allowed">
+        <h3>{{ i18n "contest_sorting_allowed" }}</h3>
+        <ul>
+          {{ range . }}<li>{{ . }}</li>{{ end }}
+        </ul>
+      </div>
+      {{ end }}
+      {{ with .Params.sorting_forbidden }}
+      <div class="sorting-col sorting-forbidden">
+        <h3>{{ i18n "contest_sorting_forbidden" }}</h3>
+        <ul>
+          {{ range . }}<li>{{ . }}</li>{{ end }}
+        </ul>
+      </div>
+      {{ end }}
+    </div>
+  </div>
+
+  <div class="contest-section">
+    <h2>{{ i18n "contest_join_heading" }}</h2>
+    <p>{{ i18n "contest_join_period" }} {{ .Params.contest_start }} – {{ .Params.contest_end }}.</p>
+    <p>{{ i18n "contest_registration" }}</p>
+    <div class="contest-contact card">
+      <p><strong>{{ i18n "contest_contact_person" }}:</strong> {{ .Params.contact_person }}</p>
+      <p><strong>{{ i18n "phone" }}:</strong> <a href="tel:{{ .Params.contact_phone }}">{{ .Params.contact_phone }}</a></p>
+      <p><strong>{{ i18n "email" }}:</strong> <a href="mailto:{{ .Params.contact_email }}">{{ .Params.contact_email }}</a></p>
+    </div>
+    {{ with .Params.billing_address }}
+    <p class="contest-billing"><strong>{{ i18n "contest_billing" }}:</strong> {{ . }}, {{ i18n "contest_ico" }}: {{ $.Params.billing_ico }}</p>
+    {{ end }}
+  </div>
 
   {{ with .Params.photos }}
   <div class="photo-grid">
@@ -30,6 +72,4 @@
     {{ end }}
   </div>
   {{ end }}
-
-  <p><em>{{ i18n "good_luck" }} {{ $.Params.contact_person }}.</em></p>
 {{ end }}

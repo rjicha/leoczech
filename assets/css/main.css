@@ -566,6 +566,99 @@ img {
 
 /* --- Contest --- */
 
+.contest-tagline {
+  font-size: 1.15rem;
+  font-weight: 400;
+  color: var(--color-primary-dark);
+  margin-bottom: 1.5rem;
+}
+
+.contest-prizes-intro {
+  font-weight: 400;
+  margin-bottom: 0.5rem;
+}
+
+.contest-section {
+  margin-top: 2rem;
+}
+
+.contest-section h2 {
+  font-size: 1.25rem;
+  font-weight: 400;
+  margin-bottom: 0.75rem;
+}
+
+.sorting-rules {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.sorting-col {
+  background: var(--color-surface);
+  border-radius: 8px;
+  padding: 1.25rem;
+}
+
+.sorting-col h3 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+.sorting-allowed h3 {
+  color: #16a34a;
+}
+
+.sorting-forbidden h3 {
+  color: #dc2626;
+}
+
+.sorting-col ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sorting-col li {
+  padding: 0.25rem 0;
+  font-size: 0.95rem;
+}
+
+.sorting-col li::before {
+  content: "•";
+  margin-right: 0.5rem;
+  font-weight: 700;
+}
+
+.sorting-allowed li::before {
+  color: #16a34a;
+}
+
+.sorting-forbidden li::before {
+  color: #dc2626;
+}
+
+@media (max-width: 768px) {
+  .sorting-rules {
+    grid-template-columns: 1fr;
+  }
+}
+
+.contest-contact {
+  margin: 1rem 0;
+}
+
+.contest-contact p {
+  margin-bottom: 0.35rem;
+}
+
+.contest-billing {
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+  margin-top: 0.75rem;
+}
+
 .prize-list {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
