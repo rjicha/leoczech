@@ -52,3 +52,25 @@ disableKinds = ["taxonomy", "term"]
     name = "Contact"
     url = "/en/contact/"
     weight = 4
+
+[languages.de]
+  label = "Deutsch"
+  weight = 3
+  contentDir = "content/de"
+
+  [[languages.de.menus.main]]
+    name = "Startseite"
+    url = "/de/"
+    weight = 1
+  [[languages.de.menus.main]]
+    name = "Über uns"
+    url = "/de/ueber-uns/"
+    weight = 2
+  [[languages.de.menus.main]]
+    name = "Papierlöwe"
+    url = "/de/wettbewerb/"
+    weight = 3
+  [[languages.de.menus.main]]
+    name = "Kontakt"
+    url = "/de/kontakt/"
+    weight = 4
