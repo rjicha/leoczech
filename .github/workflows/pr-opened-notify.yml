@@ -1,0 +1,91 @@
+name: Notify email sender on PR creation
+
+on:
+  pull_request:
+    types: [opened]
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: 'PR number to test notification for'
+        required: true
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Resolve PR number
+        id: pr
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "number=${{ github.event.inputs.pr_number }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "number=${{ github.event.pull_request.number }}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Get PR details and notify sender
+        uses: actions/github-script@v7
+        env:
+          WORKER_URL: ${{ secrets.EMAIL_WORKER_URL }}
+          NOTIFY_SECRET: ${{ secrets.EMAIL_NOTIFY_SECRET }}
+        with:
+          script: |
+            const prNumber = parseInt('${{ steps.pr.outputs.number }}');
+
+            const { data: pr } = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: prNumber,
+            });
+
+            const body = pr.body || '';
+            const issueMatches = body.match(/(?:closes|fixes|resolves)\s+#(\d+)/gi) || [];
+            const issueNumbers = issueMatches.map(m => parseInt(m.match(/\d+/)[0]));
+
+            if (issueNumbers.length === 0) {
+              console.log('No issue references found in PR body');
+              return;
+            }
+
+            for (const num of issueNumbers) {
+              const { data: issue } = await github.rest.issues.get({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: num,
+              });
+
+              const emailMatch = issue.body?.match(/\*\*Submitted via email by:\*\* (.+)/);
+              if (!emailMatch) {
+                console.log(`Issue #${num} was not created via email, skipping`);
+                continue;
+              }
+
+              const senderEmail = emailMatch[1].trim();
+              const previewUrl = `https://deploy-preview-${prNumber}--leoczech-preview.netlify.app`;
+              const actionsUrl = `${process.env.GITHUB_SERVER_URL}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+
+              console.log(`Notifying ${senderEmail} about PR #${prNumber} for issue #${num}`);
+              console.log(`Preview URL: ${previewUrl}`);
+
+              const response = await fetch(process.env.WORKER_URL + '/notify', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${process.env.NOTIFY_SECRET}`,
+                },
+                body: JSON.stringify({
+                  type: 'preview',
+                  to: senderEmail,
+                  issueNumber: num,
+                  issueTitle: issue.title,
+                  prUrl: pr.html_url,
+                  previewUrl: previewUrl,
+                  actionsUrl: actionsUrl,
+                }),
+              });
+
+              if (!response.ok) {
+                console.error(`Failed to notify for issue #${num}: ${response.status} ${await response.text()}`);
+              } else {
+                console.log(`Notification sent successfully for issue #${num}`);
+              }
+            }
