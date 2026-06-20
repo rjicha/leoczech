@@ -17,7 +17,7 @@ Allow non-technical users to create GitHub issues by sending an email to `issues
 
 1. PR with `Closes #N` is merged
 2. GitHub Action (`pr-merged-notify.yml`) fetches issue #N body
-3. Action extracts sender email from `**Submitted via email by:** <email>`
+3. Action extracts sender email from `**Original email from:** <email>` and language from `**Language:** <code>`
 4. Action calls Worker HTTP endpoint `POST /notify` to send resolution email
 5. Sender receives notification with PR link
 
@@ -37,6 +37,7 @@ Allow non-technical users to create GitHub issues by sending an email to `issues
 
 ---
 **Original email from:** sender@example.com
+**Language:** cs
 
 > <original email text in original language>
 ```

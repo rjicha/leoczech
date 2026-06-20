@@ -165,9 +165,9 @@ Dashboard: resend.com → Domains
 
 1. Check GitHub Actions → `pr-merged-notify` run for errors
 2. PR body must contain `Closes #N`, `Fixes #N`, or `Resolves #N`
-3. The referenced issue must contain `**Submitted via email by:** <email>` in the body
+3. The referenced issue must contain `**Original email from:** <email>` in the body
 4. Verify `EMAIL_WORKER_URL` and `EMAIL_NOTIFY_SECRET` GitHub Actions secrets are set
-5. Test the Worker endpoint: `curl -X POST <WORKER_URL>/notify -H "Authorization: Bearer <SECRET>" -H "Content-Type: application/json" -d '{"to":"test@example.com","issueNumber":1,"issueTitle":"Test","prUrl":"https://example.com"}'`
+5. Test the Worker endpoint: `curl -X POST <WORKER_URL>/notify -H "Authorization: Bearer <SECRET>" -H "Content-Type: application/json" -d '{"type":"preview","to":"test@example.com","issueNumber":1,"issueTitle":"Test","prUrl":"https://example.com","previewUrl":"https://example.com","actionsUrl":"https://example.com","language":"cs"}'`
 
 ### Rotating secrets
 

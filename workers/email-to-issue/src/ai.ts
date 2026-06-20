@@ -53,7 +53,6 @@ export async function polishEmail(
   })) as { response?: string | object };
 
   const raw = response.response;
-  console.log("AI raw response:", raw);
 
   let obj: Record<string, unknown>;
   if (typeof raw === "object" && raw !== null) {
