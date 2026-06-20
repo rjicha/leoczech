@@ -97,13 +97,33 @@ export function createReplyHtml(
   return sections.join("\n");
 }
 
-export function createNotifyHtml(
+export function createPreviewHtml(
+  issueNumber: number,
+  issueTitle: string,
+  prUrl: string,
+  previewUrl: string,
+  actionsUrl: string,
+): string {
+  return [
+    `<p>Your request (issue #${issueNumber}: <strong>${issueTitle}</strong>) has been implemented and is ready for review.</p>`,
+    `<h3>Preview</h3>`,
+    `<p>See the changes live: <a href="${previewUrl}">${previewUrl}</a></p>`,
+    `<h3>Pull Request</h3>`,
+    `<p><a href="${prUrl}">${prUrl}</a></p>`,
+    `<h3>Agent Log</h3>`,
+    `<p>See how the AI agent worked on your request: <a href="${actionsUrl}">${actionsUrl}</a></p>`,
+    "<hr>",
+    '<p style="color: #888; font-size: 12px;">This is an automated notification from LeoCzech issue tracker. The changes will go live after review and approval.</p>',
+  ].join("\n");
+}
+
+export function createResolvedHtml(
   issueNumber: number,
   issueTitle: string,
   prUrl: string,
 ): string {
   return [
-    `<p>Your request (issue #${issueNumber}: "${issueTitle}") has been resolved.</p>`,
+    `<p>Your request (issue #${issueNumber}: <strong>${issueTitle}</strong>) has been approved and deployed.</p>`,
     `<p>Pull request: <a href="${prUrl}">${prUrl}</a></p>`,
     "<hr>",
     '<p style="color: #888; font-size: 12px;">This is an automated notification from LeoCzech issue tracker.</p>',

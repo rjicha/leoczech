@@ -2,7 +2,8 @@ import { describe, it, expect } from "vitest";
 import {
   formatIssueBody,
   createReplyHtml,
-  createNotifyHtml,
+  createPreviewHtml,
+  createResolvedHtml,
 } from "../src/format";
 
 describe("formatIssueBody", () => {
@@ -25,44 +26,44 @@ describe("createReplyHtml", () => {
       42,
       "https://github.com/rjicha/leoczech/issues/42",
       "Add German version",
-      "### Context\nNeed it.\n\n### Requirements\n- Translate pages",
+      "### Context\nNeed it.",
       "Přidat německou verzi",
-      "### Kontext\nJe to potřeba.\n\n### Požadavky\n- Přeložit stránky",
+      "### Kontext\nJe to potřeba.",
       "cs",
     );
     expect(result).toContain("Dobrý den,");
     expect(result).toContain("<h2>Přidat německou verzi</h2>");
-    expect(result).toContain("<h3>Kontext</h3>");
-    expect(result).toContain("<h3>Context</h3>");
     expect(result).toContain("Anglická verze");
     expect(result).toContain('<a href="https://github.com/rjicha/leoczech/issues/42"');
   });
+});
 
-  it("skips English section for English emails", () => {
-    const result = createReplyHtml(
-      1,
-      "https://example.com",
-      "Fix homepage",
-      "### Context\nIt is broken.",
-      "Fix homepage",
-      "### Context\nIt is broken.",
-      "en",
+describe("createPreviewHtml", () => {
+  it("includes preview link, PR link, and actions link", () => {
+    const result = createPreviewHtml(
+      42,
+      "Add German version",
+      "https://github.com/rjicha/leoczech/pull/43",
+      "https://deploy-preview-43--leoczech-preview.netlify.app",
+      "https://github.com/rjicha/leoczech/actions/runs/123",
     );
-    expect(result).toContain("Hi,");
-    expect(result).toContain("<h2>Fix homepage</h2>");
-    expect(result).not.toContain("Anglická verze");
+    expect(result).toContain("ready for review");
+    expect(result).toContain("deploy-preview-43--leoczech-preview.netlify.app");
+    expect(result).toContain("pull/43");
+    expect(result).toContain("actions/runs/123");
+    expect(result).toContain("Agent Log");
   });
 });
 
-describe("createNotifyHtml", () => {
-  it("includes issue info and PR link as HTML", () => {
-    const result = createNotifyHtml(
+describe("createResolvedHtml", () => {
+  it("includes issue info and PR link", () => {
+    const result = createResolvedHtml(
       42,
-      "Fix homepage",
+      "Add German version",
       "https://github.com/rjicha/leoczech/pull/43",
     );
     expect(result).toContain("#42");
-    expect(result).toContain("resolved");
-    expect(result).toContain('<a href="https://github.com/rjicha/leoczech/pull/43"');
+    expect(result).toContain("approved and deployed");
+    expect(result).toContain("pull/43");
   });
 });

@@ -68,6 +68,7 @@ jobs:
           git push origin "$BRANCH_NAME"
 
       - name: Create Pull Request
+        id: create-pr
         if: success()
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -78,7 +79,7 @@ jobs:
           BRANCH_NAME="feature/${ISSUE_NUMBER}-${SLUG}"
           git rev-parse --verify "origin/$BRANCH_NAME" 2>/dev/null || exit 0
 
-          gh pr create \
+          PR_URL=$(gh pr create \
             --base master \
             --head "$BRANCH_NAME" \
             --title "feat: ${ISSUE_TITLE} (#${ISSUE_NUMBER})" \
@@ -86,4 +87,43 @@ jobs:
 
           Please review the changes before merging.
 
-          Closes #${ISSUE_NUMBER}"
+          Closes #${ISSUE_NUMBER}")
+
+          PR_NUMBER=$(echo "$PR_URL" | grep -o '[0-9]*$')
+          echo "pr_url=$PR_URL" >> "$GITHUB_OUTPUT"
+          echo "pr_number=$PR_NUMBER" >> "$GITHUB_OUTPUT"
+
+      - name: Notify email sender about preview
+        if: steps.create-pr.outputs.pr_url
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WORKER_URL: ${{ secrets.EMAIL_WORKER_URL }}
+          NOTIFY_SECRET: ${{ secrets.EMAIL_NOTIFY_SECRET }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+          PR_URL: ${{ steps.create-pr.outputs.pr_url }}
+          PR_NUMBER: ${{ steps.create-pr.outputs.pr_number }}
+        run: |
+          ISSUE_BODY=$(gh issue view "$ISSUE_NUMBER" --json body --jq .body)
+          SENDER_EMAIL=$(echo "$ISSUE_BODY" | grep -oP '(?<=\*\*Submitted via email by:\*\* ).+')
+
+          if [ -z "$SENDER_EMAIL" ]; then
+            echo "Issue was not created via email, skipping notification"
+            exit 0
+          fi
+
+          PREVIEW_URL="https://deploy-preview-${PR_NUMBER}--leoczech-preview.netlify.app"
+          ACTIONS_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+
+          curl -s -X POST "${WORKER_URL}/notify" \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer ${NOTIFY_SECRET}" \
+            -d "{
+              \"type\": \"preview\",
+              \"to\": \"${SENDER_EMAIL}\",
+              \"issueNumber\": ${ISSUE_NUMBER},
+              \"issueTitle\": \"${ISSUE_TITLE}\",
+              \"prUrl\": \"${PR_URL}\",
+              \"previewUrl\": \"${PREVIEW_URL}\",
+              \"actionsUrl\": \"${ACTIONS_URL}\"
+            }"

@@ -1,5 +1,5 @@
 import PostalMime from "postal-mime";
-import { formatIssueBody, createReplyHtml, createNotifyHtml } from "./format";
+import { formatIssueBody, createReplyHtml, createPreviewHtml, createResolvedHtml } from "./format";
 import { createGitHubIssue } from "./github";
 import { polishEmail } from "./ai";
 
@@ -110,18 +110,38 @@ export default {
       return new Response("Unauthorized", { status: 401 });
     }
 
-    const { to, issueNumber, issueTitle, prUrl } = (await request.json()) as {
+    const body = (await request.json()) as {
+      type: "preview" | "resolved";
       to: string;
       issueNumber: number;
       issueTitle: string;
       prUrl: string;
+      previewUrl?: string;
+      actionsUrl?: string;
     };
+
+    let subject: string;
+    let html: string;
+
+    if (body.type === "preview") {
+      subject = `Ready for review: ${body.issueTitle}`;
+      html = createPreviewHtml(
+        body.issueNumber,
+        body.issueTitle,
+        body.prUrl,
+        body.previewUrl || body.prUrl,
+        body.actionsUrl || body.prUrl,
+      );
+    } else {
+      subject = `Deployed: ${body.issueTitle}`;
+      html = createResolvedHtml(body.issueNumber, body.issueTitle, body.prUrl);
+    }
 
     await sendEmail(env, {
       from: "issues@web.leoczech.cz",
-      to,
-      subject: `Resolved: ${issueTitle}`,
-      html: createNotifyHtml(issueNumber, issueTitle, prUrl),
+      to: body.to,
+      subject,
+      html,
     });
 
     return new Response("OK", { status: 200 });

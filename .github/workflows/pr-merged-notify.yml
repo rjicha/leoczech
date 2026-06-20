@@ -48,6 +48,7 @@ jobs:
                   'Authorization': `Bearer ${process.env.NOTIFY_SECRET}`,
                 },
                 body: JSON.stringify({
+                  type: 'resolved',
                   to: senderEmail,
                   issueNumber: num,
                   issueTitle: issue.title,
