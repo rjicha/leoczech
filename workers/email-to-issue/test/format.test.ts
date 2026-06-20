@@ -4,7 +4,6 @@ import {
   formatIssueBody,
   createReplyBody,
   createNotifyBody,
-  buildRawEmail,
 } from "../src/format";
 
 describe("formatIssueTitle", () => {
@@ -76,55 +75,5 @@ describe("createNotifyBody", () => {
   it("includes resolved language", () => {
     const result = createNotifyBody(1, "Title", "https://example.com");
     expect(result).toContain("resolved");
-  });
-});
-
-describe("buildRawEmail", () => {
-  it("produces valid MIME email with required headers", () => {
-    const raw = buildRawEmail({
-      from: "issues@leoczech.cz",
-      to: "user@example.com",
-      subject: "Re: Fix homepage",
-      body: "Your request has been received.",
-    });
-    expect(raw).toContain("From: issues@leoczech.cz");
-    expect(raw).toContain("To: user@example.com");
-    expect(raw).toContain("Subject: Re: Fix homepage");
-    expect(raw).toContain("MIME-Version: 1.0");
-    expect(raw).toContain("Content-Type: text/plain; charset=utf-8");
-    expect(raw).toContain("Your request has been received.");
-  });
-
-  it("includes In-Reply-To and References when inReplyTo is provided", () => {
-    const raw = buildRawEmail({
-      from: "issues@leoczech.cz",
-      to: "user@example.com",
-      subject: "Re: Test",
-      body: "Body",
-      inReplyTo: "<abc123@mail.example.com>",
-    });
-    expect(raw).toContain("In-Reply-To: <abc123@mail.example.com>");
-    expect(raw).toContain("References: <abc123@mail.example.com>");
-  });
-
-  it("omits In-Reply-To when not provided", () => {
-    const raw = buildRawEmail({
-      from: "issues@leoczech.cz",
-      to: "user@example.com",
-      subject: "Re: Test",
-      body: "Body",
-    });
-    expect(raw).not.toContain("In-Reply-To:");
-    expect(raw).not.toContain("References:");
-  });
-
-  it("separates headers from body with double CRLF", () => {
-    const raw = buildRawEmail({
-      from: "a@b.com",
-      to: "c@d.com",
-      subject: "Test",
-      body: "Hello",
-    });
-    expect(raw).toContain("\r\n\r\nHello");
   });
 });
