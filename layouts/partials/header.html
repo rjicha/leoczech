@@ -14,10 +14,13 @@
       {{ range .Site.Menus.main }}
         <li><a href="{{ .URL }}">{{ .Name }}</a></li>
       {{ end }}
-      {{ if .IsTranslated }}
-        {{ range .Translations }}
-          <li><a href="{{ .RelPermalink }}" class="lang-switch">{{ .Language.Label }}</a></li>
-        {{ end }}
+      {{ with .AllTranslations }}
+        <li class="lang-switcher">
+          {{ range . }}
+            {{ $active := eq .Language.Lang $.Language.Lang }}
+            <a href="{{ .RelPermalink }}" class="lang-option{{ if $active }} active{{ end }}"{{ if $active }} aria-current="true"{{ end }} hreflang="{{ .Language.Lang }}">{{ strings.ToUpper .Language.Lang }}</a>
+          {{ end }}
+        </li>
       {{ end }}
     </ul>
   </div>
