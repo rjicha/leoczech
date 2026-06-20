@@ -6,7 +6,7 @@ on:
 
 jobs:
   implement:
-    if: contains(github.event.issue.labels.*.name, 'automate')
+    if: github.event.label.name == 'automate'
     runs-on: ubuntu-latest
     permissions:
       contents: write
