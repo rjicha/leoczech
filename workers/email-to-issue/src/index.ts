@@ -4,7 +4,6 @@ import {
   formatIssueBody,
   createReplyBody,
   createNotifyBody,
-  buildRawEmail,
 } from "./format";
 import { createGitHubIssue } from "./github";
 
@@ -12,8 +11,27 @@ interface Env {
   GITHUB_TOKEN: string;
   GITHUB_OWNER: string;
   GITHUB_REPO: string;
-  SEND_EMAIL: SendEmail;
+  RESEND_API_KEY: string;
   NOTIFY_SECRET: string;
+}
+
+async function sendEmail(
+  env: Env,
+  opts: { from: string; to: string; subject: string; text: string },
+): Promise<void> {
+  const response = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${env.RESEND_API_KEY}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(opts),
+  });
+
+  if (!response.ok) {
+    const error = await response.text();
+    throw new Error(`Resend API error: ${response.status} ${error}`);
+  }
 }
 
 export default {
@@ -41,20 +59,18 @@ export default {
       repo: env.GITHUB_REPO,
     });
 
-    const replyRaw = buildRawEmail({
-      from: message.to,
-      to: sender,
-      subject: `Re: ${title}`,
-      body: createReplyBody(issue.number, issue.html_url),
-      inReplyTo: message.headers.get("message-id") || undefined,
-    });
-
-    const replyMessage = new EmailMessage(
-      message.to,
-      sender,
-      new Blob([replyRaw]).stream(),
-    );
-    await env.SEND_EMAIL.send(replyMessage);
+    try {
+      console.log(`Sending reply to ${sender}`);
+      await sendEmail(env, {
+        from: "issues@web.leoczech.cz",
+        to: sender,
+        subject: `Re: ${title}`,
+        text: createReplyBody(issue.number, issue.html_url),
+      });
+      console.log("Reply sent successfully");
+    } catch (err) {
+      console.error("Failed to send reply:", err);
+    }
   },
 
   async fetch(request: Request, env: Env): Promise<Response> {
@@ -79,19 +95,12 @@ export default {
       prUrl: string;
     };
 
-    const raw = buildRawEmail({
-      from: "issues@leoczech.cz",
+    await sendEmail(env, {
+      from: "issues@web.leoczech.cz",
       to,
       subject: `Resolved: ${issueTitle}`,
-      body: createNotifyBody(issueNumber, issueTitle, prUrl),
+      text: createNotifyBody(issueNumber, issueTitle, prUrl),
     });
-
-    const emailMsg = new EmailMessage(
-      "issues@leoczech.cz",
-      to,
-      new Blob([raw]).stream(),
-    );
-    await env.SEND_EMAIL.send(emailMsg);
 
     return new Response("OK", { status: 200 });
   },
