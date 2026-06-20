@@ -8,7 +8,7 @@ Operational guide for setting up, deploying, and troubleshooting the email-to-is
 Email (issues@web.leoczech.cz)
   → Cloudflare Email Routing (MX records on web.leoczech.cz)
   → Cloudflare Worker (email-to-issue)
-  → Workers AI (Llama 3.1 — polishes email into English issue)
+  → Workers AI (configurable model — translates + rephrases into structured English issue)
   → GitHub API (creates issue with email + automate labels)
   → Resend API (sends reply email with issue link)
 
@@ -87,16 +87,17 @@ Set via `npx wrangler secret put <NAME>` or Cloudflare Dashboard → Worker → 
 
 ### Worker Vars (in wrangler.toml, not secret)
 
-| Var | Value |
-|-----|-------|
-| `GITHUB_OWNER` | `rjicha` |
-| `GITHUB_REPO` | `leoczech` |
+| Var | Value | Notes |
+|-----|-------|-------|
+| `GITHUB_OWNER` | `rjicha` | |
+| `GITHUB_REPO` | `leoczech` | |
+| `AI_MODEL` | `@cf/meta/llama-4-scout-17b-16e-instruct` | Change if model is deprecated; see Workers AI dashboard for available models |
 
 ### Worker Bindings (in wrangler.toml)
 
 | Binding | Type | Purpose |
 |---------|------|---------|
-| `AI` | Workers AI | Polishes email text into structured English issue |
+| `AI` | Workers AI | Translates and rephrases email into structured English issue with localized version |
 
 ## 4. GitHub Configuration
 
@@ -153,8 +154,11 @@ Dashboard: resend.com → Domains
 
 ### AI polishing fails
 
-- Worker falls back to raw email text automatically
+- Worker falls back to raw email text automatically — issues still get created, just without translation/structure
 - Check Worker logs for "AI polishing failed" messages
+- Common causes:
+  - **Model deprecated:** update `AI_MODEL` in `wrangler.toml` and redeploy. Check available models at Cloudflare → AI → Models
+  - **Response parsing error:** the model returned an unexpected format. The Worker handles nested objects and code-fenced JSON, but novel formats may need a parser update
 - Workers AI has 10,000 neurons/day free limit — unlikely to hit with normal email volume
 
 ### PR merged but no notification email

@@ -1,5 +1,5 @@
 import PostalMime from "postal-mime";
-import { formatIssueBody, createReplyBody, createNotifyBody } from "./format";
+import { formatIssueBody, createReplyHtml, createNotifyHtml } from "./format";
 import { createGitHubIssue } from "./github";
 import { polishEmail } from "./ai";
 
@@ -10,11 +10,12 @@ interface Env {
   RESEND_API_KEY: string;
   NOTIFY_SECRET: string;
   AI: Ai;
+  AI_MODEL: string;
 }
 
 async function sendEmail(
   env: Env,
-  opts: { from: string; to: string; subject: string; text: string },
+  opts: { from: string; to: string; subject: string; html: string },
 ): Promise<void> {
   const response = await fetch("https://api.resend.com/emails", {
     method: "POST",
@@ -52,13 +53,16 @@ export default {
 
     let polished;
     try {
-      polished = await polishEmail(env.AI, emailContent);
-      console.log(`AI polished: "${polished.title}"`);
+      polished = await polishEmail(env.AI, env.AI_MODEL, emailContent);
     } catch (err) {
-      console.error("AI polishing failed, using raw email:", err);
+      console.error("AI polishing failed:", String(err));
+      const fallbackTitle = parsed.subject?.trim() || "(no subject)";
       polished = {
-        title: parsed.subject?.trim() || "(no subject)",
+        title: fallbackTitle,
         description: originalText,
+        title_local: fallbackTitle,
+        description_local: originalText,
+        language: "cs",
       };
     }
 
@@ -72,21 +76,22 @@ export default {
     });
 
     try {
-      console.log(`Sending reply to ${sender}`);
       await sendEmail(env, {
         from: "issues@web.leoczech.cz",
         to: sender,
         subject: `Re: ${polished.title}`,
-        text: createReplyBody(
+        html: createReplyHtml(
           issue.number,
           issue.html_url,
           polished.title,
           polished.description,
+          polished.title_local,
+          polished.description_local,
+          polished.language,
         ),
       });
-      console.log("Reply sent successfully");
     } catch (err) {
-      console.error("Failed to send reply:", err);
+      console.error("Failed to send reply:", String(err));
     }
   },
 
@@ -116,7 +121,7 @@ export default {
       from: "issues@web.leoczech.cz",
       to,
       subject: `Resolved: ${issueTitle}`,
-      text: createNotifyBody(issueNumber, issueTitle, prUrl),
+      html: createNotifyHtml(issueNumber, issueTitle, prUrl),
     });
 
     return new Response("OK", { status: 200 });

@@ -2,113 +2,76 @@
 
 ## Goal
 
-Allow non-technical users to create GitHub issues by sending an email to `issues@leoczech.cz`. The email subject becomes the issue title, the body becomes the issue description, and the sender receives a reply with the created issue link. When a PR referencing the issue is merged, the sender receives a resolution notification with the PR link.
+Allow non-technical users to create GitHub issues by sending an email to `issues@web.leoczech.cz`. The Worker uses AI to translate and rephrase the email into a well-structured English GitHub issue, adds `email` and `automate` labels (triggering automated implementation), and replies to the sender in their language with both localized and English versions of the issue.
 
-## Current State
+## Email → Issue Flow
 
-- GitHub issues are created manually via the GitHub UI or `gh` CLI
-- Non-technical stakeholders must log into GitHub to submit requests
-- Cloudflare manages DNS for `leoczech.cz` (A/CNAME records for GitHub Pages)
-- No email routing is configured in Cloudflare
+1. User sends email to `issues@web.leoczech.cz` (any language, Czech most common)
+2. Cloudflare Email Routing (MX records on `web.leoczech.cz` subdomain) triggers the Worker
+3. Worker parses the email with `postal-mime`
+4. Workers AI (configurable model) translates and rephrases into a structured English issue with Context, Requirements, and Acceptance Criteria sections — plus a localized version in the sender's language
+5. Worker creates GitHub issue with `email` + `automate` labels
+6. Worker sends HTML reply via Resend in the sender's language, showing the localized issue description first, then the English version below
 
-## Target State
-
-### Email → Issue Flow
-
-1. User sends email to `issues@leoczech.cz`
-2. Cloudflare Email Routing receives it and triggers a Worker
-3. Worker parses the email (subject → title, plain text body → description)
-4. Worker calls GitHub API to create the issue with label `email`
-5. Worker sends reply: "Your request has been received — Issue #N: \<link\>"
-
-### PR Merge → Notification Flow
+## PR Merge → Notification Flow
 
 1. PR with `Closes #N` is merged
-2. GitHub Action triggers, fetches issue #N body
-3. Action extracts sender email from `Submitted via email by: <email>`
-4. Action calls Worker HTTP endpoint to send notification
-5. Sender receives: "Your request has been resolved — PR: \<link\>"
+2. GitHub Action (`pr-merged-notify.yml`) fetches issue #N body
+3. Action extracts sender email from `**Submitted via email by:** <email>`
+4. Action calls Worker HTTP endpoint `POST /notify` to send resolution email
+5. Sender receives notification with PR link
 
-### Issue Body Format
+## Issue Body Format (on GitHub, English)
 
 ```markdown
-**Submitted via email by:** sender@example.com
+## Description
+
+### Context
+<AI-generated context>
+
+### Requirements
+- <bulleted list>
+
+### Acceptance Criteria
+- [ ] <checklist>
 
 ---
+**Original email from:** sender@example.com
 
-<original email body>
+> <original email text in original language>
 ```
 
-### Worker Project Structure
+## Worker Project Structure
 
 ```
 workers/email-to-issue/
-├── wrangler.toml
+├── wrangler.toml          # config, AI binding, model var
 ├── package.json
 ├── tsconfig.json
 ├── vitest.config.ts
 ├── src/
-│   ├── index.ts       # email + fetch handlers
-│   ├── format.ts      # pure formatting functions
-│   └── github.ts      # GitHub API client
+│   ├── index.ts           # email + fetch handlers
+│   ├── ai.ts              # Workers AI integration
+│   ├── format.ts          # issue body + HTML email formatting
+│   └── github.ts          # GitHub API client
 └── test/
     ├── format.test.ts
     └── github.test.ts
 ```
 
-### Cloudflare Configuration
+## Infrastructure
 
-**Email Routing (manual in dashboard):**
-- Enable Email Routing for `leoczech.cz`
-- Route `issues@leoczech.cz` → Worker `email-to-issue`
-- Catch-all → forward to existing email provider
+- **Cloudflare Email Routing** — MX records on `web.leoczech.cz` subdomain (avoids conflict with Huhtamaki MX on root domain)
+- **Cloudflare Workers AI** — free tier, model configurable via `AI_MODEL` env var
+- **Resend** — free tier (100 emails/day), sends reply and notification emails from `issues@web.leoczech.cz`
+- **GitHub Actions** — `pr-merged-notify.yml` triggers on PR merge
 
-**DNS (auto-added by Cloudflare):**
-- MX records for Cloudflare Email Routing
-- TXT records for SPF
-
-**Worker Secrets:**
-- `GITHUB_TOKEN` — fine-grained PAT scoped to `rjicha/leoczech` with Issues write
-- `NOTIFY_SECRET` — shared secret for authenticating GitHub Actions → Worker calls
-
-**Worker Vars (in wrangler.toml):**
-- `GITHUB_OWNER` = `rjicha`
-- `GITHUB_REPO` = `leoczech`
-
-## Files to Change
-
-### 1. `workers/email-to-issue/wrangler.toml` (create)
-- Worker name, compatibility date, entry point
-- `send_email` binding for reply/notification emails
-- Environment variables for GitHub owner/repo
-
-### 2. `workers/email-to-issue/package.json` (create)
-- Runtime dependency: `postal-mime` (email parsing in Workers)
-- Dev dependencies: `wrangler`, `vitest`, `@cloudflare/workers-types`, `typescript`
-
-### 3. `workers/email-to-issue/src/format.ts` (create)
-- `formatIssueTitle(subject)` — trims subject or returns "(no subject)"
-- `formatIssueBody(sender, body)` — formats issue body with sender info
-- `createReplyBody(issueNumber, issueUrl)` — reply email body
-- `buildRawEmail(opts)` — constructs raw MIME email string
-
-### 4. `workers/email-to-issue/src/github.ts` (create)
-- `createGitHubIssue(opts)` — calls GitHub REST API to create issue
-
-### 5. `workers/email-to-issue/src/index.ts` (create)
-- `email` handler: parse email → create issue → send reply
-- `fetch` handler: POST `/notify` endpoint for PR merge notifications (auth via `NOTIFY_SECRET`)
-
-### 6. `.github/workflows/pr-merged-notify.yml` (create)
-- Triggers on `pull_request` closed + merged
-- Extracts issue numbers from PR body (`Closes #N`)
-- Fetches issue body, extracts sender email
-- Calls Worker `/notify` endpoint
+See `docs/runbook-email-to-issue.md` for complete setup, DNS records, secrets, and troubleshooting.
 
 ## Validation
 
 1. `cd workers/email-to-issue && npm test` — all unit tests pass
 2. `npx wrangler deploy` — deploys successfully
-3. Send test email to `issues@leoczech.cz` → issue appears with correct title, body, `email` label
-4. Sender receives reply email with issue link
-5. Merge a PR with `Closes #N` → sender receives resolution email with PR link
+3. Send Czech email → issue created in English with structured description, `email` + `automate` labels
+4. Sender receives HTML reply in Czech with both Czech and English issue description
+5. Merge PR with `Closes #N` → sender receives resolution email

@@ -1,72 +1,68 @@
 import { describe, it, expect } from "vitest";
 import {
   formatIssueBody,
-  createReplyBody,
-  createNotifyBody,
+  createReplyHtml,
+  createNotifyHtml,
 } from "../src/format";
 
 describe("formatIssueBody", () => {
   it("includes description and original text with sender", () => {
     const result = formatIssueBody(
       "user@example.com",
-      "Add a German version of the website and translate all pages.",
-      "Pridej nemeckou verzi webu a preloz vsechny stranky do nemciny.",
+      "### Context\nNeed German version.\n\n### Requirements\n- Translate pages",
+      "Pridej nemeckou verzi",
     );
     expect(result).toContain("## Description");
-    expect(result).toContain(
-      "Add a German version of the website and translate all pages.",
-    );
+    expect(result).toContain("### Context");
     expect(result).toContain("**Original email from:** user@example.com");
-    expect(result).toContain(
-      "> Pridej nemeckou verzi webu a preloz vsechny stranky do nemciny.",
-    );
-  });
-
-  it("quotes multiline original text", () => {
-    const result = formatIssueBody(
-      "user@example.com",
-      "Description",
-      "Line one\nLine two",
-    );
-    expect(result).toContain("> Line one\n> Line two");
+    expect(result).toContain("> Pridej nemeckou verzi");
   });
 });
 
-describe("createReplyBody", () => {
-  it("includes greeting and issue details", () => {
-    const result = createReplyBody(
+describe("createReplyHtml", () => {
+  it("renders local and English versions for Czech emails", () => {
+    const result = createReplyHtml(
       42,
       "https://github.com/rjicha/leoczech/issues/42",
-      "Add German version of the website",
-      "Create a German language version and translate all pages.",
+      "Add German version",
+      "### Context\nNeed it.\n\n### Requirements\n- Translate pages",
+      "Přidat německou verzi",
+      "### Kontext\nJe to potřeba.\n\n### Požadavky\n- Přeložit stránky",
+      "cs",
+    );
+    expect(result).toContain("Dobrý den,");
+    expect(result).toContain("<h2>Přidat německou verzi</h2>");
+    expect(result).toContain("<h3>Kontext</h3>");
+    expect(result).toContain("<h3>Context</h3>");
+    expect(result).toContain("Anglická verze");
+    expect(result).toContain('<a href="https://github.com/rjicha/leoczech/issues/42"');
+  });
+
+  it("skips English section for English emails", () => {
+    const result = createReplyHtml(
+      1,
+      "https://example.com",
+      "Fix homepage",
+      "### Context\nIt is broken.",
+      "Fix homepage",
+      "### Context\nIt is broken.",
+      "en",
     );
     expect(result).toContain("Hi,");
-    expect(result).toContain("received your request");
-    expect(result).toContain("Title: Add German version of the website");
-    expect(result).toContain(
-      "Description: Create a German language version and translate all pages.",
-    );
-    expect(result).toContain("#42");
-    expect(result).toContain(
-      "https://github.com/rjicha/leoczech/issues/42",
-    );
+    expect(result).toContain("<h2>Fix homepage</h2>");
+    expect(result).not.toContain("Anglická verze");
   });
 });
 
-describe("createNotifyBody", () => {
-  it("includes issue number, title, and PR URL", () => {
-    const result = createNotifyBody(
+describe("createNotifyHtml", () => {
+  it("includes issue info and PR link as HTML", () => {
+    const result = createNotifyHtml(
       42,
       "Fix homepage",
       "https://github.com/rjicha/leoczech/pull/43",
     );
     expect(result).toContain("#42");
-    expect(result).toContain("Fix homepage");
-    expect(result).toContain("https://github.com/rjicha/leoczech/pull/43");
-  });
-
-  it("includes resolved language", () => {
-    const result = createNotifyBody(1, "Title", "https://example.com");
     expect(result).toContain("resolved");
+    expect(result).toContain('<a href="https://github.com/rjicha/leoczech/pull/43"');
   });
 });

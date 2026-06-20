@@ -50,10 +50,10 @@ Both modes converge to the same outcome: a spec in `docs/specs/`, a PR referenci
 
 A Cloudflare Worker (`workers/email-to-issue/`) receives emails at `issues@web.leoczech.cz` and:
 
-1. Parses the email (subject + body)
-2. Uses Workers AI (Llama 3.1) to rephrase the request into a well-formed English issue
+1. Parses the email (subject + body, any language)
+2. Uses Workers AI to translate and rephrase the request into a structured English issue (Context, Requirements, Acceptance Criteria)
 3. Creates a GitHub issue with `email` and `automate` labels (triggering the automated workflow)
-4. Replies to the sender with the polished issue text and a link
+4. Replies to the sender in their language (Czech, Slovak, German, or English) with both the localized and English issue description
 
 When a PR referencing the issue is merged, a GitHub Action sends a resolution notification to the original email sender.
 
