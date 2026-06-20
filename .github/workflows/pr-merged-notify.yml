@@ -39,7 +39,9 @@ jobs:
               }
 
               const senderEmail = emailMatch[1].trim();
-              console.log(`Notifying ${senderEmail} about issue #${num}`);
+              const langMatch = issue.body?.match(/\*\*Language:\*\* (\w+)/);
+              const language = langMatch ? langMatch[1].trim() : 'cs';
+              console.log(`Notifying ${senderEmail} (${language}) about issue #${num}`);
 
               const response = await fetch(process.env.WORKER_URL + '/notify', {
                 method: 'POST',
@@ -53,6 +55,7 @@ jobs:
                   issueNumber: num,
                   issueTitle: issue.title,
                   prUrl: context.payload.pull_request.html_url,
+                  language: language,
                 }),
               });
 

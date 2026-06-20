@@ -68,7 +68,7 @@ export default {
 
     const issue = await createGitHubIssue({
       title: polished.title,
-      body: formatIssueBody(sender, polished.description, originalText),
+      body: formatIssueBody(sender, polished.description, originalText, polished.language),
       labels: ["email", "automate"],
       token: env.GITHUB_TOKEN,
       owner: env.GITHUB_OWNER,
@@ -118,23 +118,26 @@ export default {
       prUrl: string;
       previewUrl?: string;
       actionsUrl?: string;
+      language?: string;
     };
 
+    const lang = body.language || "cs";
     let subject: string;
     let html: string;
 
     if (body.type === "preview") {
-      subject = `Ready for review: ${body.issueTitle}`;
+      subject = `Re: ${body.issueTitle}`;
       html = createPreviewHtml(
         body.issueNumber,
         body.issueTitle,
         body.prUrl,
         body.previewUrl || body.prUrl,
         body.actionsUrl || body.prUrl,
+        lang,
       );
     } else {
-      subject = `Deployed: ${body.issueTitle}`;
-      html = createResolvedHtml(body.issueNumber, body.issueTitle, body.prUrl);
+      subject = `Re: ${body.issueTitle}`;
+      html = createResolvedHtml(body.issueNumber, body.issueTitle, body.prUrl, lang);
     }
 
     await sendEmail(env, {
