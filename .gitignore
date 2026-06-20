@@ -2,3 +2,7 @@ public/
 resources/_gen/
 .hugo_build.lock
 .superpowers/
+workers/*/node_modules/
+workers/*/dist/
+.wrangler/
+node_modules/

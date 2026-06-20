@@ -1,0 +1,74 @@
+import { describe, it, expect } from "vitest";
+import {
+  formatIssueBody,
+  createReplyHtml,
+  createPreviewHtml,
+  createResolvedHtml,
+} from "../src/format";
+
+describe("formatIssueBody", () => {
+  it("includes description, sender, language, and original text", () => {
+    const result = formatIssueBody(
+      "user@example.com",
+      "### Context\nNeed German version.",
+      "Pridej nemeckou verzi",
+      "cs",
+    );
+    expect(result).toContain("**Original email from:** user@example.com");
+    expect(result).toContain("**Language:** cs");
+    expect(result).toContain("> Pridej nemeckou verzi");
+  });
+});
+
+describe("createReplyHtml", () => {
+  it("renders bilingual reply for Czech emails", () => {
+    const result = createReplyHtml(
+      42,
+      "https://github.com/rjicha/leoczech/issues/42",
+      "Add German version",
+      "### Context\nNeed it.",
+      "Přidat německou verzi",
+      "### Kontext\nJe to potřeba.",
+      "cs",
+    );
+    expect(result).toContain("Dobrý den,");
+    expect(result).toContain("<h2>Přidat německou verzi</h2>");
+    expect(result).toContain("Anglická verze");
+  });
+});
+
+describe("createPreviewHtml", () => {
+  it("renders in Czech with preview, PR, and agent links", () => {
+    const result = createPreviewHtml(
+      42,
+      "Add German version",
+      "https://github.com/rjicha/leoczech/pull/43",
+      "https://deploy-preview-43--leoczech-preview.netlify.app",
+      "https://github.com/rjicha/leoczech/actions/runs/123",
+      "cs",
+    );
+    expect(result).toContain("Dobrý den,");
+    expect(result).toContain("připraven ke kontrole");
+    expect(result).toContain("deploy-preview-43");
+    expect(result).toContain("actions/runs/123");
+  });
+
+  it("renders in English for English emails", () => {
+    const result = createPreviewHtml(
+      1, "Title", "https://pr", "https://preview", "https://actions", "en",
+    );
+    expect(result).toContain("Hi,");
+    expect(result).toContain("ready for review");
+  });
+});
+
+describe("createResolvedHtml", () => {
+  it("renders in Czech", () => {
+    const result = createResolvedHtml(
+      42, "Add German version", "https://github.com/rjicha/leoczech/pull/43", "cs",
+    );
+    expect(result).toContain("Dobrý den,");
+    expect(result).toContain("schválen a nasazen");
+    expect(result).toContain("pull/43");
+  });
+});
