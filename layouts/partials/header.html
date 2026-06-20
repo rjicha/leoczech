@@ -15,9 +15,13 @@
         <li><a href="{{ .URL }}">{{ .Name }}</a></li>
       {{ end }}
       {{ if .IsTranslated }}
-        {{ range .Translations }}
-          <li><a href="{{ .RelPermalink }}" class="lang-switch">{{ .Language.Label }}</a></li>
-        {{ end }}
+        <li class="lang-switcher">
+          {{ range .AllTranslations }}
+            <a href="{{ .RelPermalink }}" hreflang="{{ .Language.Lang }}"
+               class="lang-option{{ if eq .Language.Lang $.Language.Lang }} active{{ end }}"
+               title="{{ .Language.Label }}">{{ .Language.Lang | upper }}</a>
+          {{ end }}
+        </li>
       {{ end }}
     </ul>
   </div>
