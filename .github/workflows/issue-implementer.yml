@@ -4,9 +4,13 @@ on:
   issues:
     types: [labeled]
 
+concurrency:
+  group: implement-issue-${{ github.event.issue.number }}
+  cancel-in-progress: true
+
 jobs:
   implement:
-    if: contains(github.event.issue.labels.*.name, 'automate')
+    if: github.event.label.name == 'automate'
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -43,7 +47,7 @@ jobs:
           git fetch origin "$BRANCH_NAME" 2>/dev/null && git push origin --delete "$BRANCH_NAME" || true
           git checkout -b "$BRANCH_NAME"
 
-          claude -p --dangerously-skip-permissions "You are implementing a feature for the LeoCzech Hugo website. Read CLAUDE.md for project conventions and workflow instructions.
+          claude -p "You are implementing a feature for the LeoCzech Hugo website. Read CLAUDE.md for project conventions and workflow instructions.
 
           A user has requested this change via GitHub issue #${ISSUE_NUMBER}:
 

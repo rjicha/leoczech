@@ -60,11 +60,12 @@ jobs:
               }
 
               const senderEmail = emailMatch[1].trim();
+              const langMatch = issue.body?.match(/\*\*Language:\*\* (\w+)/);
+              const language = langMatch ? langMatch[1].trim() : 'cs';
               const previewUrl = `https://deploy-preview-${prNumber}--leoczech-preview.netlify.app`;
               const actionsUrl = `${process.env.GITHUB_SERVER_URL}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
 
-              console.log(`Notifying ${senderEmail} about PR #${prNumber} for issue #${num}`);
-              console.log(`Preview URL: ${previewUrl}`);
+              console.log(`Notifying ${senderEmail} (${language}) about PR #${prNumber} for issue #${num}`);
 
               const response = await fetch(process.env.WORKER_URL + '/notify', {
                 method: 'POST',
@@ -80,6 +81,7 @@ jobs:
                   prUrl: pr.html_url,
                   previewUrl: previewUrl,
                   actionsUrl: actionsUrl,
+                  language: language,
                 }),
               });
 
