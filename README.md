@@ -18,7 +18,12 @@ Open http://localhost:1313/
 
 Content files are in `content/cs/` (Czech) and `content/en/` (English) as Markdown with YAML frontmatter.
 
-To request a content change without editing files directly, open a GitHub Issue with the `content-edit` label. An AI agent will create a PR with the proposed changes.
+To request a content change without editing files directly:
+
+- **Via GitHub:** Open a GitHub Issue with the `content-edit` label
+- **Via email:** Send an email to `issues@web.leoczech.cz` — a Cloudflare Worker creates a GitHub issue automatically, polishes the request with AI into English, and replies with the issue link
+
+Both methods feed into the same agentic workflow below.
 
 ## Agentic Workflow
 
@@ -40,6 +45,19 @@ The label can be added or removed at any time — adding it later triggers the a
 Without the `automate` label, a developer picks up the issue and implements it locally using their own Claude subscription, following the workflow described in `CLAUDE.md`.
 
 Both modes converge to the same outcome: a spec in `docs/specs/`, a PR referencing the issue, and the issue closed on merge.
+
+### Email-to-Issue Bridge
+
+A Cloudflare Worker (`workers/email-to-issue/`) receives emails at `issues@web.leoczech.cz` and:
+
+1. Parses the email (subject + body)
+2. Uses Workers AI (Llama 3.1) to rephrase the request into a well-formed English issue
+3. Creates a GitHub issue with `email` and `automate` labels (triggering the automated workflow)
+4. Replies to the sender with the polished issue text and a link
+
+When a PR referencing the issue is merged, a GitHub Action sends a resolution notification to the original email sender.
+
+See `docs/runbook-email-to-issue.md` for full infrastructure setup and troubleshooting.
 
 ## Preview
 

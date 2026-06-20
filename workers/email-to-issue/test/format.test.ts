@@ -1,62 +1,55 @@
 import { describe, it, expect } from "vitest";
 import {
-  formatIssueTitle,
   formatIssueBody,
   createReplyBody,
   createNotifyBody,
 } from "../src/format";
 
-describe("formatIssueTitle", () => {
-  it("uses email subject as title", () => {
-    expect(formatIssueTitle("Fix the homepage")).toBe("Fix the homepage");
-  });
-
-  it("trims whitespace", () => {
-    expect(formatIssueTitle("  Fix the homepage  ")).toBe("Fix the homepage");
-  });
-
-  it("returns placeholder for empty subject", () => {
-    expect(formatIssueTitle("")).toBe("(no subject)");
-  });
-
-  it("returns placeholder for undefined subject", () => {
-    expect(formatIssueTitle(undefined)).toBe("(no subject)");
-  });
-});
-
 describe("formatIssueBody", () => {
-  it("includes sender email and body text", () => {
+  it("includes description and original text with sender", () => {
     const result = formatIssueBody(
       "user@example.com",
-      "Please update the contact page",
+      "Add a German version of the website and translate all pages.",
+      "Pridej nemeckou verzi webu a preloz vsechny stranky do nemciny.",
     );
-    expect(result).toContain("**Submitted via email by:** user@example.com");
-    expect(result).toContain("Please update the contact page");
+    expect(result).toContain("## Description");
+    expect(result).toContain(
+      "Add a German version of the website and translate all pages.",
+    );
+    expect(result).toContain("**Original email from:** user@example.com");
+    expect(result).toContain(
+      "> Pridej nemeckou verzi webu a preloz vsechny stranky do nemciny.",
+    );
   });
 
-  it("separates sender info from body with horizontal rule", () => {
-    const result = formatIssueBody("user@example.com", "Body text");
-    expect(result).toBe(
-      "**Submitted via email by:** user@example.com\n\n---\n\nBody text",
+  it("quotes multiline original text", () => {
+    const result = formatIssueBody(
+      "user@example.com",
+      "Description",
+      "Line one\nLine two",
     );
+    expect(result).toContain("> Line one\n> Line two");
   });
 });
 
 describe("createReplyBody", () => {
-  it("includes issue number and URL", () => {
+  it("includes greeting and issue details", () => {
     const result = createReplyBody(
       42,
       "https://github.com/rjicha/leoczech/issues/42",
+      "Add German version of the website",
+      "Create a German language version and translate all pages.",
+    );
+    expect(result).toContain("Hi,");
+    expect(result).toContain("received your request");
+    expect(result).toContain("Title: Add German version of the website");
+    expect(result).toContain(
+      "Description: Create a German language version and translate all pages.",
     );
     expect(result).toContain("#42");
     expect(result).toContain(
       "https://github.com/rjicha/leoczech/issues/42",
     );
-  });
-
-  it("includes automated reply notice", () => {
-    const result = createReplyBody(1, "https://example.com");
-    expect(result).toContain("automated reply");
   });
 });
 

@@ -1,18 +1,35 @@
-export function formatIssueTitle(subject: string | undefined): string {
-  const trimmed = subject?.trim();
-  return trimmed || "(no subject)";
-}
-
-export function formatIssueBody(sender: string, body: string): string {
-  return `**Submitted via email by:** ${sender}\n\n---\n\n${body}`;
+export function formatIssueBody(
+  sender: string,
+  description: string,
+  originalText: string,
+): string {
+  return [
+    "## Description",
+    "",
+    description,
+    "",
+    "---",
+    `**Original email from:** ${sender}`,
+    "",
+    `> ${originalText.split("\n").join("\n> ")}`,
+  ].join("\n");
 }
 
 export function createReplyBody(
   issueNumber: number,
   issueUrl: string,
+  title: string,
+  description: string,
 ): string {
   return [
-    "Your request has been received and tracked.",
+    "Hi,",
+    "",
+    "I've received your request and will start working on it shortly.",
+    "",
+    "Here's the issue I've created based on your email:",
+    "",
+    `Title: ${title}`,
+    `Description: ${description}`,
     "",
     `Issue #${issueNumber}: ${issueUrl}`,
     "",

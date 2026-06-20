@@ -1,11 +1,7 @@
 import PostalMime from "postal-mime";
-import {
-  formatIssueTitle,
-  formatIssueBody,
-  createReplyBody,
-  createNotifyBody,
-} from "./format";
+import { formatIssueBody, createReplyBody, createNotifyBody } from "./format";
 import { createGitHubIssue } from "./github";
+import { polishEmail } from "./ai";
 
 interface Env {
   GITHUB_TOKEN: string;
@@ -13,6 +9,7 @@ interface Env {
   GITHUB_REPO: string;
   RESEND_API_KEY: string;
   NOTIFY_SECRET: string;
+  AI: Ai;
 }
 
 async function sendEmail(
@@ -43,17 +40,32 @@ export default {
     const rawEmail = await new Response(message.raw).arrayBuffer();
     const parsed = await new PostalMime().parse(rawEmail);
 
-    const title = formatIssueTitle(parsed.subject);
-    const body =
+    const originalText =
       parsed.text ||
       parsed.html?.replace(/<[^>]*>/g, "") ||
       "(empty body)";
     const sender = message.from;
 
+    const emailContent = parsed.subject
+      ? `Subject: ${parsed.subject}\n\n${originalText}`
+      : originalText;
+
+    let polished;
+    try {
+      polished = await polishEmail(env.AI, emailContent);
+      console.log(`AI polished: "${polished.title}"`);
+    } catch (err) {
+      console.error("AI polishing failed, using raw email:", err);
+      polished = {
+        title: parsed.subject?.trim() || "(no subject)",
+        description: originalText,
+      };
+    }
+
     const issue = await createGitHubIssue({
-      title,
-      body: formatIssueBody(sender, body),
-      labels: ["email"],
+      title: polished.title,
+      body: formatIssueBody(sender, polished.description, originalText),
+      labels: ["email", "automate"],
       token: env.GITHUB_TOKEN,
       owner: env.GITHUB_OWNER,
       repo: env.GITHUB_REPO,
@@ -64,8 +76,13 @@ export default {
       await sendEmail(env, {
         from: "issues@web.leoczech.cz",
         to: sender,
-        subject: `Re: ${title}`,
-        text: createReplyBody(issue.number, issue.html_url),
+        subject: `Re: ${polished.title}`,
+        text: createReplyBody(
+          issue.number,
+          issue.html_url,
+          polished.title,
+          polished.description,
+        ),
       });
       console.log("Reply sent successfully");
     } catch (err) {
