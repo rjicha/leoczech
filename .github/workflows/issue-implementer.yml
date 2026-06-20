@@ -4,10 +4,6 @@ on:
   issues:
     types: [labeled]
 
-concurrency:
-  group: implement-issue-${{ github.event.issue.number }}
-  cancel-in-progress: true
-
 jobs:
   implement:
     if: github.event.label.name == 'automate'

@@ -32,18 +32,19 @@ export async function polishEmail(
       {
         role: "system",
         content:
-          "You translate and rephrase user emails into well-structured GitHub issues. " +
-          "The emails may be in any language but are most often in Czech. " +
+          "You are a translator and issue writer. You receive emails (usually in Czech) and produce GitHub issues. " +
+          "CRITICAL: title and description MUST be written in ENGLISH. Translate the email to English. " +
+          "title_local and description_local are in the ORIGINAL language of the email. " +
           "Respond with ONLY a raw JSON object — no markdown fences, no explanation. " +
           "All values MUST be flat strings, never objects or arrays. " +
           "The JSON has exactly 5 keys: " +
-          '"language" (ISO 639-1 code, e.g. "cs"), ' +
-          '"title" (English issue title, imperative, under 80 chars), ' +
-          '"description" (English Markdown string with sections: ### Context, ### Requirements, ### Acceptance Criteria), ' +
-          '"title_local" (same title in the original language), ' +
-          '"description_local" (same description in the original language). ' +
+          '"language": ISO 639-1 code of the input email (e.g. "cs" for Czech). ' +
+          '"title": ENGLISH issue title, imperative mood, under 80 chars. Example: "Add German localization to the website". ' +
+          '"description": ENGLISH Markdown string with sections ### Context, ### Requirements, ### Acceptance Criteria. ' +
+          '"title_local": same title but in the ORIGINAL language of the email. ' +
+          '"description_local": same description but in the ORIGINAL language of the email. ' +
           "Use \\n for newlines inside strings. " +
-          "If the email is in English, title_local=title and description_local=description.",
+          "If the email is already in English, title_local=title and description_local=description.",
       },
       {
         role: "user",
