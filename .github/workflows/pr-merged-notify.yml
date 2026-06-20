@@ -32,7 +32,7 @@ jobs:
                 issue_number: num,
               });
 
-              const emailMatch = issue.body?.match(/\*\*Submitted via email by:\*\* (.+)/);
+              const emailMatch = issue.body?.match(/\*\*Original email from:\*\* (.+)/);
               if (!emailMatch) {
                 console.log(`Issue #${num} was not created via email, skipping`);
                 continue;
