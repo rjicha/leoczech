@@ -108,18 +108,36 @@ img {
 }
 
 .lang-switch {
-  color: var(--color-text-secondary);
-  padding: 0.4rem 0.75rem;
-  font-size: 0.85rem;
+  display: inline-flex;
+  align-items: stretch;
+  margin-left: 0.5rem;
   border: 1px solid var(--color-border);
   border-radius: 4px;
-  margin-left: 0.5rem;
+  overflow: hidden;
 }
 
-.lang-switch:hover {
+.lang-switch a {
+  padding: 0.25rem 0.55rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  border-radius: 0;
+  border-left: 1px solid var(--color-border);
+}
+
+.lang-switch a:first-child {
+  border-left: 0;
+}
+
+.lang-switch a:hover {
   color: var(--color-text);
-  border-color: var(--color-text);
+  background: rgba(0, 0, 0, 0.04);
   text-decoration: none;
+}
+
+.lang-switch a.is-active {
+  background: var(--color-primary);
+  color: #ffffff;
 }
 
 /* Mobile hamburger (CSS-only) */
@@ -189,7 +207,13 @@ img {
   .lang-switch {
     margin-left: 0;
     margin-top: 0.5rem;
-    text-align: center;
+    width: auto;
+    align-self: flex-start;
+  }
+
+  .lang-switch a {
+    width: auto;
+    padding: 0.4rem 0.75rem;
   }
 }
 

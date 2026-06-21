@@ -15,9 +15,11 @@
         <li><a href="{{ .URL }}">{{ .Name }}</a></li>
       {{ end }}
       {{ if .IsTranslated }}
-        {{ range .Translations }}
-          <li><a href="{{ .RelPermalink }}" class="lang-switch">{{ .Language.Label }}</a></li>
-        {{ end }}
+        <li class="lang-switch">
+          {{ range .AllTranslations }}
+            <a href="{{ .RelPermalink }}"{{ if eq .Language.Lang $.Language.Lang }} class="is-active" aria-current="page"{{ end }}>{{ .Language.Lang | upper }}</a>
+          {{ end }}
+        </li>
       {{ end }}
     </ul>
   </div>
