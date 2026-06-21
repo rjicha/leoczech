@@ -41,3 +41,45 @@ export async function createGitHubIssue(
   const data = (await response.json()) as GitHubIssueResponse;
   return { number: data.number, html_url: data.html_url };
 }
+
+export interface MergePullRequestOptions {
+  pullNumber: number;
+  token: string;
+  owner: string;
+  repo: string;
+}
+
+export type MergeResult =
+  | { status: "merged"; message: string }
+  | { status: "already_merged" }
+  | { status: "error"; message: string };
+
+export async function mergePullRequest(
+  opts: MergePullRequestOptions,
+): Promise<MergeResult> {
+  const response = await fetch(
+    `https://api.github.com/repos/${opts.owner}/${opts.repo}/pulls/${opts.pullNumber}/merge`,
+    {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${opts.token}`,
+        "Content-Type": "application/json",
+        "User-Agent": "email-to-issue-worker",
+        Accept: "application/vnd.github+json",
+      },
+      body: JSON.stringify({ merge_method: "squash" }),
+    },
+  );
+
+  if (response.ok) {
+    const data = (await response.json()) as { message: string };
+    return { status: "merged", message: data.message };
+  }
+
+  if (response.status === 405) {
+    return { status: "already_merged" };
+  }
+
+  const error = await response.text();
+  return { status: "error", message: `GitHub API error: ${response.status} ${error}` };
+}

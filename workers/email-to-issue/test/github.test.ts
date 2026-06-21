@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { createGitHubIssue } from "../src/github";
+import { createGitHubIssue, mergePullRequest } from "../src/github";
 
 describe("createGitHubIssue", () => {
   beforeEach(() => {
@@ -88,5 +88,70 @@ describe("createGitHubIssue", () => {
       number: 10,
       html_url: "https://github.com/rjicha/leoczech/issues/10",
     });
+  });
+});
+
+describe("mergePullRequest", () => {
+  beforeEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it("returns merged on success", async () => {
+    vi.spyOn(globalThis, "fetch").mockResolvedValueOnce(
+      new Response(JSON.stringify({ message: "Pull Request successfully merged" }), { status: 200 }),
+    );
+
+    const result = await mergePullRequest({
+      pullNumber: 43,
+      token: "ghp_test",
+      owner: "rjicha",
+      repo: "leoczech",
+    });
+
+    expect(fetch).toHaveBeenCalledWith(
+      "https://api.github.com/repos/rjicha/leoczech/pulls/43/merge",
+      expect.objectContaining({
+        method: "PUT",
+        headers: expect.objectContaining({
+          Authorization: "Bearer ghp_test",
+        }),
+      }),
+    );
+
+    const sentBody = JSON.parse(
+      (fetch as ReturnType<typeof vi.fn>).mock.calls[0][1].body,
+    );
+    expect(sentBody.merge_method).toBe("squash");
+    expect(result).toEqual({ status: "merged", message: "Pull Request successfully merged" });
+  });
+
+  it("returns already_merged on 405", async () => {
+    vi.spyOn(globalThis, "fetch").mockResolvedValueOnce(
+      new Response("Method Not Allowed", { status: 405 }),
+    );
+
+    const result = await mergePullRequest({
+      pullNumber: 43,
+      token: "ghp_test",
+      owner: "rjicha",
+      repo: "leoczech",
+    });
+
+    expect(result).toEqual({ status: "already_merged" });
+  });
+
+  it("returns error on other failures", async () => {
+    vi.spyOn(globalThis, "fetch").mockResolvedValueOnce(
+      new Response("Conflict", { status: 409 }),
+    );
+
+    const result = await mergePullRequest({
+      pullNumber: 43,
+      token: "ghp_test",
+      owner: "rjicha",
+      repo: "leoczech",
+    });
+
+    expect(result).toEqual({ status: "error", message: "GitHub API error: 409 Conflict" });
   });
 });
