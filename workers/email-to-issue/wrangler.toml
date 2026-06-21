@@ -10,3 +10,8 @@ binding = "AI"
 GITHUB_OWNER = "rjicha"
 GITHUB_REPO = "leoczech"
 AI_MODEL = "@cf/meta/llama-4-scout-17b-16e-instruct"
+
+# TODO: Create KV namespace and add binding
+# [[kv_namespaces]]
+# binding = "AUTHORIZED_EMAILS"
+# id = "<run: npx wrangler kv:namespace create AUTHORIZED_EMAILS>"
