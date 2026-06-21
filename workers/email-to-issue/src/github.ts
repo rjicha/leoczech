@@ -54,9 +54,36 @@ export type MergeResult =
   | { status: "already_merged" }
   | { status: "error"; message: string };
 
+async function approvePullRequest(opts: MergePullRequestOptions): Promise<void> {
+  const response = await fetch(
+    `https://api.github.com/repos/${opts.owner}/${opts.repo}/pulls/${opts.pullNumber}/reviews`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${opts.token}`,
+        "Content-Type": "application/json",
+        "User-Agent": "email-to-issue-worker",
+        Accept: "application/vnd.github+json",
+      },
+      body: JSON.stringify({ event: "APPROVE", body: "Approved via email" }),
+    },
+  );
+
+  if (!response.ok) {
+    const error = await response.text();
+    throw new Error(`GitHub review API error: ${response.status} ${error}`);
+  }
+}
+
 export async function mergePullRequest(
   opts: MergePullRequestOptions,
 ): Promise<MergeResult> {
+  try {
+    await approvePullRequest(opts);
+  } catch (err) {
+    console.error(`Approval failed (continuing to merge attempt): ${err}`);
+  }
+
   const response = await fetch(
     `https://api.github.com/repos/${opts.owner}/${opts.repo}/pulls/${opts.pullNumber}/merge`,
     {

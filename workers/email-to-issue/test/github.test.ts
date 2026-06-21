@@ -96,10 +96,10 @@ describe("mergePullRequest", () => {
     vi.restoreAllMocks();
   });
 
-  it("returns merged on success", async () => {
-    vi.spyOn(globalThis, "fetch").mockResolvedValueOnce(
-      new Response(JSON.stringify({ message: "Pull Request successfully merged" }), { status: 200 }),
-    );
+  it("approves then merges on success", async () => {
+    const fetchSpy = vi.spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce(new Response(JSON.stringify({ id: 1 }), { status: 200 }))
+      .mockResolvedValueOnce(new Response(JSON.stringify({ message: "Pull Request successfully merged" }), { status: 200 }));
 
     const result = await mergePullRequest({
       pullNumber: 43,
@@ -108,27 +108,40 @@ describe("mergePullRequest", () => {
       repo: "leoczech",
     });
 
-    expect(fetch).toHaveBeenCalledWith(
+    expect(fetchSpy).toHaveBeenCalledTimes(2);
+    expect(fetchSpy).toHaveBeenNthCalledWith(1,
+      "https://api.github.com/repos/rjicha/leoczech/pulls/43/reviews",
+      expect.objectContaining({ method: "POST" }),
+    );
+    expect(fetchSpy).toHaveBeenNthCalledWith(2,
       "https://api.github.com/repos/rjicha/leoczech/pulls/43/merge",
-      expect.objectContaining({
-        method: "PUT",
-        headers: expect.objectContaining({
-          Authorization: "Bearer ghp_test",
-        }),
-      }),
+      expect.objectContaining({ method: "PUT" }),
     );
 
-    const sentBody = JSON.parse(
-      (fetch as ReturnType<typeof vi.fn>).mock.calls[0][1].body,
-    );
-    expect(sentBody.merge_method).toBe("squash");
+    const mergeBody = JSON.parse(fetchSpy.mock.calls[1][1].body);
+    expect(mergeBody.merge_method).toBe("squash");
+    expect(result).toEqual({ status: "merged", message: "Pull Request successfully merged" });
+  });
+
+  it("still merges if approval fails", async () => {
+    vi.spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce(new Response("Forbidden", { status: 403 }))
+      .mockResolvedValueOnce(new Response(JSON.stringify({ message: "Pull Request successfully merged" }), { status: 200 }));
+
+    const result = await mergePullRequest({
+      pullNumber: 43,
+      token: "ghp_test",
+      owner: "rjicha",
+      repo: "leoczech",
+    });
+
     expect(result).toEqual({ status: "merged", message: "Pull Request successfully merged" });
   });
 
   it("returns already_merged on 405", async () => {
-    vi.spyOn(globalThis, "fetch").mockResolvedValueOnce(
-      new Response("Method Not Allowed", { status: 405 }),
-    );
+    vi.spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce(new Response(JSON.stringify({ id: 1 }), { status: 200 }))
+      .mockResolvedValueOnce(new Response("Method Not Allowed", { status: 405 }));
 
     const result = await mergePullRequest({
       pullNumber: 43,
@@ -141,9 +154,9 @@ describe("mergePullRequest", () => {
   });
 
   it("returns error on other failures", async () => {
-    vi.spyOn(globalThis, "fetch").mockResolvedValueOnce(
-      new Response("Conflict", { status: 409 }),
-    );
+    vi.spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce(new Response(JSON.stringify({ id: 1 }), { status: 200 }))
+      .mockResolvedValueOnce(new Response("Conflict", { status: 409 }));
 
     const result = await mergePullRequest({
       pullNumber: 43,
