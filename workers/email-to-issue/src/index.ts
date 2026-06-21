@@ -1,7 +1,8 @@
 import PostalMime from "postal-mime";
-import { formatIssueBody, createReplyHtml, createPreviewHtml, createResolvedHtml } from "./format";
-import { createGitHubIssue } from "./github";
+import { formatIssueBody, createReplyHtml, createPreviewHtml, createResolvedHtml, createApproveResponseHtml } from "./format";
+import { createGitHubIssue, mergePullRequest } from "./github";
 import { polishEmail } from "./ai";
+import { computeHmac, verifyHmac } from "./crypto";
 
 interface Env {
   GITHUB_TOKEN: string;
@@ -11,6 +12,7 @@ interface Env {
   NOTIFY_SECRET: string;
   AI: Ai;
   AI_MODEL: string;
+  AUTHORIZED_EMAILS: KVNamespace;
 }
 
 async function sendEmail(
@@ -32,12 +34,27 @@ async function sendEmail(
   }
 }
 
+function htmlResponse(html: string, status: number): Response {
+  return new Response(html, {
+    status,
+    headers: { "Content-Type": "text/html; charset=utf-8" },
+  });
+}
+
 export default {
   async email(
     message: ForwardableEmailMessage,
     env: Env,
     ctx: ExecutionContext,
   ): Promise<void> {
+    const sender = message.from.toLowerCase();
+
+    const authorized = await env.AUTHORIZED_EMAILS.get(sender);
+    if (!authorized) {
+      console.log(`Unauthorized sender: ${sender}, dropping`);
+      return;
+    }
+
     const rawEmail = await new Response(message.raw).arrayBuffer();
     const parsed = await new PostalMime().parse(rawEmail);
 
@@ -45,7 +62,6 @@ export default {
       parsed.text ||
       parsed.html?.replace(/<[^>]*>/g, "") ||
       "(empty body)";
-    const sender = message.from;
 
     const emailContent = parsed.subject
       ? `Subject: ${parsed.subject}\n\n${originalText}`
@@ -96,11 +112,57 @@ export default {
   },
 
   async fetch(request: Request, env: Env): Promise<Response> {
+    const url = new URL(request.url);
+
+    if (url.pathname === "/approve" && request.method === "GET") {
+      const pr = url.searchParams.get("pr");
+      const issue = url.searchParams.get("issue");
+      const email = url.searchParams.get("email")?.toLowerCase() ?? null;
+      const lang = url.searchParams.get("lang") || "cs";
+      const token = url.searchParams.get("token");
+
+      if (!pr || !issue || !email || !token) {
+        return htmlResponse(createApproveResponseHtml("invalid_token", lang), 400);
+      }
+
+      const valid = await verifyHmac(env.NOTIFY_SECRET, `${pr}:${issue}:${email}`, token);
+      if (!valid) {
+        return htmlResponse(createApproveResponseHtml("invalid_token", lang), 403);
+      }
+
+      const authorized = await env.AUTHORIZED_EMAILS.get(email);
+      if (!authorized) {
+        return htmlResponse(createApproveResponseHtml("unauthorized", lang), 403);
+      }
+
+      const pullNumber = parseInt(pr, 10);
+      if (isNaN(pullNumber)) {
+        return htmlResponse(createApproveResponseHtml("invalid_token", lang), 400);
+      }
+
+      const result = await mergePullRequest({
+        pullNumber,
+        token: env.GITHUB_TOKEN,
+        owner: env.GITHUB_OWNER,
+        repo: env.GITHUB_REPO,
+      });
+
+      if (result.status === "merged") {
+        return htmlResponse(createApproveResponseHtml("success", lang), 200);
+      }
+
+      if (result.status === "already_merged") {
+        return htmlResponse(createApproveResponseHtml("already_merged", lang), 200);
+      }
+
+      console.error(`Merge failed for PR #${pr}: ${result.message}`);
+      return htmlResponse(createApproveResponseHtml("error", lang), 500);
+    }
+
     if (request.method !== "POST") {
       return new Response("Method not allowed", { status: 405 });
     }
 
-    const url = new URL(request.url);
     if (url.pathname !== "/notify") {
       return new Response("Not found", { status: 404 });
     }
@@ -126,6 +188,12 @@ export default {
     let html: string;
 
     if (body.type === "preview") {
+      const prMatch = body.prUrl.match(/\/pulls?\/(\d+)/);
+      const prNumber = prMatch ? prMatch[1] : "";
+      const hmacData = `${prNumber}:${body.issueNumber}:${body.to.toLowerCase()}`;
+      const token = await computeHmac(env.NOTIFY_SECRET, hmacData);
+      const approveUrl = `${url.origin}/approve?pr=${prNumber}&issue=${body.issueNumber}&email=${encodeURIComponent(body.to.toLowerCase())}&lang=${lang}&token=${token}`;
+
       subject = `Re: ${body.issueTitle}`;
       html = createPreviewHtml(
         body.issueNumber,
@@ -133,6 +201,7 @@ export default {
         body.prUrl,
         body.previewUrl || body.prUrl,
         body.actionsUrl || body.prUrl,
+        approveUrl,
         lang,
       );
     } else {

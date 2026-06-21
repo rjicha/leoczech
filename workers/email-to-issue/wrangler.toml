@@ -10,3 +10,7 @@ binding = "AI"
 GITHUB_OWNER = "rjicha"
 GITHUB_REPO = "leoczech"
 AI_MODEL = "@cf/meta/llama-4-scout-17b-16e-instruct"
+
+[[kv_namespaces]]
+binding = "AUTHORIZED_EMAILS"
+id = "a101bdf9ea404607b65882e4db9297ca"
