@@ -8,9 +8,21 @@ Operational guide for setting up, deploying, and troubleshooting the email-to-is
 Email (issues@web.leoczech.cz)
   → Cloudflare Email Routing (MX records on web.leoczech.cz)
   → Cloudflare Worker (email-to-issue)
-  → Workers AI (configurable model — translates + rephrases into structured English issue)
-  → GitHub API (creates issue with email + automate labels)
-  → Resend API (sends reply email with issue link)
+    → Checks sender against AUTHORIZED_EMAILS KV allowlist (drops unauthorized)
+    → Workers AI (configurable model — translates + rephrases into structured English issue)
+    → GitHub API (creates issue with email + automate labels)
+    → Resend API (sends reply email with issue link)
+
+Issue labeled "automate"
+  → GitHub Action (issue-implementer.yml)
+    → Claude Code implements the issue, creates PR
+    → Calls Worker /notify endpoint (sends preview email with accept button)
+
+Accept link clicked in email
+  → Worker /approve endpoint
+    → Validates HMAC token, checks sender in AUTHORIZED_EMAILS KV
+    → GitHub API (squash-merges the PR)
+    → Returns bilingual response page
 
 PR merged with "Closes #N"
   → GitHub Action (pr-merged-notify.yml)
@@ -81,7 +93,7 @@ Set via `npx wrangler secret put <NAME>` or Cloudflare Dashboard → Worker → 
 
 | Secret | Source | Purpose |
 |--------|--------|---------|
-| `GITHUB_TOKEN` | GitHub → Settings → Developer Settings → Fine-grained tokens | Creates issues. Scope: `rjicha/leoczech`, Issues read/write |
+| `GITHUB_TOKEN` | GitHub → Settings → Developer Settings → Fine-grained tokens | Creates issues, merges PRs. Scope: `rjicha/leoczech`, Issues read/write, Contents read/write |
 | `RESEND_API_KEY` | Resend dashboard → API Keys | Sends reply and notification emails |
 | `NOTIFY_SECRET` | Self-generated (`openssl rand -hex 32`) | Authenticates GitHub Action → Worker `/notify` calls |
 
@@ -98,6 +110,29 @@ Set via `npx wrangler secret put <NAME>` or Cloudflare Dashboard → Worker → 
 | Binding | Type | Purpose |
 |---------|------|---------|
 | `AI` | Workers AI | Translates and rephrases email into structured English issue with localized version |
+| `AUTHORIZED_EMAILS` | Workers KV | Allowlist of email addresses authorized to create issues and approve PRs |
+
+### Authorized Email Allowlist
+
+The `AUTHORIZED_EMAILS` KV namespace gates access to the entire system. Only emails from addresses in this list are processed; unauthorized senders are silently dropped.
+
+**Add an email:**
+```bash
+cd workers/email-to-issue
+npx wrangler kv key put --namespace-id="a101bdf9ea404607b65882e4db9297ca" --remote "user@example.com" "1"
+```
+
+**Remove an email:**
+```bash
+npx wrangler kv key delete --namespace-id="a101bdf9ea404607b65882e4db9297ca" --remote "user@example.com"
+```
+
+**List authorized emails:**
+```bash
+npx wrangler kv key list --namespace-id="a101bdf9ea404607b65882e4db9297ca" --remote
+```
+
+Emails can also be managed via Cloudflare Dashboard → Workers & Pages → KV.
 
 ## 4. GitHub Configuration
 
@@ -126,6 +161,7 @@ Dashboard: repo → Settings → Secrets and variables → Actions
 
 | File | Trigger | Purpose |
 |------|---------|---------|
+| `.github/workflows/issue-implementer.yml` | Issue labeled `automate` | Implements the issue via Claude Code, creates PR, sends preview notification email |
 | `.github/workflows/pr-merged-notify.yml` | PR merged | Notifies email sender when their issue's PR is merged |
 
 ## 5. Resend Configuration
@@ -141,9 +177,10 @@ Dashboard: resend.com → Domains
 ### Email sent but no issue created
 
 1. Check **Cloudflare → Email → Email Routing → Activity Log** — did the email arrive?
-2. Check **Worker metrics** (Cloudflare → Workers → email-to-issue → Metrics) — any errors?
-3. Check Worker logs: `cd workers/email-to-issue && npx wrangler tail email-to-issue --format pretty`
-4. Verify `GITHUB_TOKEN` hasn't expired (fine-grained tokens have max 1 year expiry)
+2. Check Worker logs: `cd workers/email-to-issue && npx wrangler tail email-to-issue --format pretty` — look for "Unauthorized sender" (email not in allowlist)
+3. Verify the sender's email is in the `AUTHORIZED_EMAILS` KV namespace (see Authorized Email Allowlist section above)
+4. Check **Worker metrics** (Cloudflare → Workers → email-to-issue → Metrics) — any errors?
+5. Verify `GITHUB_TOKEN` hasn't expired (fine-grained tokens have max 1 year expiry)
 
 ### Issue created but no reply email
 
@@ -161,13 +198,26 @@ Dashboard: resend.com → Domains
   - **Response parsing error:** the model returned an unexpected format. The Worker handles nested objects and code-fenced JSON, but novel formats may need a parser update
 - Workers AI has 10,000 neurons/day free limit — unlikely to hit with normal email volume
 
+### PR created but no preview notification email
+
+1. Check GitHub Actions → `AI Issue Implementer` run — did the "Notify email sender" step run?
+2. The issue must contain `**Original email from:** <email>` in the body (only email-created issues get notifications)
+3. Verify `EMAIL_WORKER_URL` and `EMAIL_NOTIFY_SECRET` GitHub Actions secrets are set
+4. Test the Worker endpoint: `curl -X POST <WORKER_URL>/notify -H "Authorization: Bearer <SECRET>" -H "Content-Type: application/json" -d '{"type":"preview","to":"test@example.com","issueNumber":1,"issueTitle":"Test","prUrl":"https://example.com/pull/1","previewUrl":"https://example.com","actionsUrl":"https://example.com","language":"cs"}'`
+
+### Accept link not working
+
+1. Check the URL parameters — `pr`, `issue`, `email`, and `token` must all be present
+2. Verify the sender's email is still in the `AUTHORIZED_EMAILS` KV namespace
+3. Check Worker logs for error details: `cd workers/email-to-issue && npx wrangler tail email-to-issue --format pretty`
+4. Verify `GITHUB_TOKEN` has Contents read/write scope (needed for PR merges)
+
 ### PR merged but no notification email
 
 1. Check GitHub Actions → `pr-merged-notify` run for errors
 2. PR body must contain `Closes #N`, `Fixes #N`, or `Resolves #N`
 3. The referenced issue must contain `**Original email from:** <email>` in the body
 4. Verify `EMAIL_WORKER_URL` and `EMAIL_NOTIFY_SECRET` GitHub Actions secrets are set
-5. Test the Worker endpoint: `curl -X POST <WORKER_URL>/notify -H "Authorization: Bearer <SECRET>" -H "Content-Type: application/json" -d '{"type":"preview","to":"test@example.com","issueNumber":1,"issueTitle":"Test","prUrl":"https://example.com","previewUrl":"https://example.com","actionsUrl":"https://example.com","language":"cs"}'`
 
 ### Rotating secrets
 
