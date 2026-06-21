@@ -1,6 +1,5 @@
 import PostalMime from "postal-mime";
 import { formatIssueBody, createReplyHtml, createPreviewHtml, createResolvedHtml, createApproveResponseHtml } from "./format";
-import type { ApproveResult } from "./format";
 import { createGitHubIssue, mergePullRequest } from "./github";
 import { polishEmail } from "./ai";
 import { computeHmac, verifyHmac } from "./crypto";
@@ -48,7 +47,7 @@ export default {
     env: Env,
     ctx: ExecutionContext,
   ): Promise<void> {
-    const sender = message.from;
+    const sender = message.from.toLowerCase();
 
     const authorized = await env.AUTHORIZED_EMAILS.get(sender);
     if (!authorized) {
@@ -118,7 +117,7 @@ export default {
     if (url.pathname === "/approve" && request.method === "GET") {
       const pr = url.searchParams.get("pr");
       const issue = url.searchParams.get("issue");
-      const email = url.searchParams.get("email");
+      const email = url.searchParams.get("email")?.toLowerCase() ?? null;
       const lang = url.searchParams.get("lang") || "cs";
       const token = url.searchParams.get("token");
 
@@ -136,8 +135,13 @@ export default {
         return htmlResponse(createApproveResponseHtml("unauthorized", lang), 403);
       }
 
+      const pullNumber = parseInt(pr, 10);
+      if (isNaN(pullNumber)) {
+        return htmlResponse(createApproveResponseHtml("invalid_token", lang), 400);
+      }
+
       const result = await mergePullRequest({
-        pullNumber: parseInt(pr, 10),
+        pullNumber,
         token: env.GITHUB_TOKEN,
         owner: env.GITHUB_OWNER,
         repo: env.GITHUB_REPO,
@@ -184,10 +188,11 @@ export default {
     let html: string;
 
     if (body.type === "preview") {
-      const prNumber = body.prUrl.split("/").pop()!;
-      const hmacData = `${prNumber}:${body.issueNumber}:${body.to}`;
+      const prMatch = body.prUrl.match(/\/pulls?\/(\d+)/);
+      const prNumber = prMatch ? prMatch[1] : "";
+      const hmacData = `${prNumber}:${body.issueNumber}:${body.to.toLowerCase()}`;
       const token = await computeHmac(env.NOTIFY_SECRET, hmacData);
-      const approveUrl = `${url.origin}/approve?pr=${prNumber}&issue=${body.issueNumber}&email=${encodeURIComponent(body.to)}&lang=${lang}&token=${token}`;
+      const approveUrl = `${url.origin}/approve?pr=${prNumber}&issue=${body.issueNumber}&email=${encodeURIComponent(body.to.toLowerCase())}&lang=${lang}&token=${token}`;
 
       subject = `Re: ${body.issueTitle}`;
       html = createPreviewHtml(

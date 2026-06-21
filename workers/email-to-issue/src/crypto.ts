@@ -22,5 +22,10 @@ export async function verifyHmac(
   token: string,
 ): Promise<boolean> {
   const expected = await computeHmac(secret, data);
-  return expected === token;
+  if (expected.length !== token.length) return false;
+  let mismatch = 0;
+  for (let i = 0; i < expected.length; i++) {
+    mismatch |= expected.charCodeAt(i) ^ token.charCodeAt(i);
+  }
+  return mismatch === 0;
 }
