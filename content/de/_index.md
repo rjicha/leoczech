@@ -10,7 +10,7 @@ opening_hours:
   - day: "Dienstag"
     hours: "7:30 – 15:00"
   - day: "Mittwoch"
-    hours: "7:00 – 15:00"
+    hours: "7:30 – 15:00"
   - day: "Donnerstag"
     hours: "7:30 – 15:00"
   - day: "Freitag"
