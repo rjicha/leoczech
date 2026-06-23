@@ -10,7 +10,7 @@ opening_hours:
   - day: "Úterý"
     hours: "7:30 – 15:00"
   - day: "Středa"
-    hours: "7:00 – 15:00"
+    hours: "7:30 – 15:00"
   - day: "Čtvrtek"
     hours: "7:30 – 15:00"
   - day: "Pátek"
