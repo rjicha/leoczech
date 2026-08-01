@@ -282,48 +282,47 @@ img {
 }
 
 .hero-hours {
-  background: rgba(100, 100, 100, 0.4);
-  border: none;
-  border-radius: 4px;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
-  padding: 1rem 1.25rem;
-  max-width: 14rem;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
+  padding: 1.25rem 1.5rem;
+  max-width: 15rem;
 }
 
 .hero-hours h2 {
-  font-size: 1.05rem;
-  font-weight: 100;
+  font-size: 0.75rem;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   margin-bottom: 0.75rem;
-  color: #fff;
+  color: var(--color-primary);
   text-align: center;
 }
 
 .hero-hours-desc {
   font-size: 0.7rem;
   font-weight: 300;
-  color: rgba(255, 255, 255, 0.8);
-  margin-bottom: 0.5rem;
+  color: var(--color-text-secondary);
+  margin-bottom: 0.75rem;
   text-align: center;
 }
 
 .hero-hours-contact {
   margin-top: 0.75rem;
   padding-top: 0.6rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  border-top: 1px solid var(--color-border);
   text-align: center;
 }
 
 .hero-hours-contact a {
-  font-size: 0.75rem;
-  font-weight: 300;
-  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--color-primary);
   text-decoration: none;
 }
 
 .hero-hours-contact a:hover {
-  color: #fff;
+  color: var(--color-primary-dark);
   text-decoration: none;
 }
 
@@ -338,12 +337,12 @@ img {
 .hero-hours dd {
   padding: 0.2rem 0;
   font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.85);
+  color: var(--color-text-secondary);
 }
 
 .hero-hours dt {
-  font-weight: 400;
-  color: #fff;
+  font-weight: 500;
+  color: var(--color-text);
   text-align: right;
 }
 
